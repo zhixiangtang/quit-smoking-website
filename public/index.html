@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quit Smoking - Better Life for Everyone</title>
   <meta name="description" content="Global quit smoking platform - track your journey, get support, and live a healthier life.">
-  <!-- Tailwind CSS (CDN - 保证访问速度) -->
+  <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome (图标) -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- 自定义样式 -->
-  <link rel="stylesheet" href="css/style.css">
-  <!-- 多语言配置文件 -->
-  <script src="js/lang.js" defer></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- 多语言配置文件（提前加载，确保script.js能获取到） -->
+  <script src="/js/lang.js"></script>
   <!-- 自定义Tailwind主题 -->
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: '#10B981', // 健康绿（戒烟主题）
-            secondary: '#3B82F6', // 辅助蓝
-            accent: '#F59E0B', // 强调橙
+            primary: '#10B981',
+            secondary: '#3B82F6',
+            accent: '#F59E0B',
             dark: '#1F2937',
             light: '#F9FAFB'
           },
@@ -37,6 +37,7 @@
   <!-- 导航栏 -->
   <nav class="sticky top-0 bg-white shadow-md z-50 transition-all duration-300">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <!-- 修复logo跳转：使用绝对路径 / 指向主页 -->
       <a href="/" class="flex items-center gap-2">
         <i class="fa-solid fa-lungs text-primary text-2xl"></i>
         <span class="text-xl font-bold text-primary">QuitSmoke</span>
@@ -52,16 +53,16 @@
         <button id="langEn" class="px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors">EN</button>
         <button id="langZh" class="px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors">中文</button>
       </div>
-      <button class="md:hidden text-dark text-xl">
+      <button class="md:hidden text-dark text-xl" id="mobileMenuBtn">
         <i class="fa-solid fa-bars"></i>
       </button>
     </div>
     <!-- 移动端菜单 -->
-    <div class="mobile-menu hidden">
-      <a href="#track" data-lang="nav.track">Track Journey</a>
-      <a href="#tips" data-lang="nav.tips">Quit Tips</a>
-      <a href="#support" data-lang="nav.support">Support</a>
-      <a href="#about" data-lang="nav.about">About</a>
+    <div class="mobile-menu hidden px-4 py-2 bg-white shadow-lg">
+      <a href="#track" data-lang="nav.track" class="block py-2">Track Journey</a>
+      <a href="#tips" data-lang="nav.tips" class="block py-2">Quit Tips</a>
+      <a href="#support" data-lang="nav.support" class="block py-2">Support</a>
+      <a href="#about" data-lang="nav.about" class="block py-2">About</a>
     </div>
   </nav>
 
@@ -72,13 +73,14 @@
       <p data-lang="hero.desc" class="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
         Your journey to a smoke-free life starts here. Track your progress, get personalized tips, and join a global community of quitters.
       </p>
-      <a href="#track" class="bg-white text-primary font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all">
+      <!-- 修改：跳转至 track.html 戒烟记录页面 -->
+      <a href="/track.html" class="bg-white text-primary font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all">
         <span data-lang="hero.btn">Start Your Journey</span> <i class="fa-solid fa-arrow-right ml-2"></i>
       </a>
     </div>
   </section>
 
-  <!-- 核心功能区 - 记录追踪 -->
+  <!-- 核心功能区 - 简介 -->
   <section id="track" class="py-16 bg-white">
     <div class="container mx-auto px-4">
       <h2 data-lang="track.title" class="text-3xl font-bold text-center mb-12">Track Your Quit Journey</h2>
@@ -106,49 +108,6 @@
           </div>
           <h3 data-lang="track.card3" class="text-xl font-semibold mb-2">Health Progress</h3>
           <p data-lang="track.card3Desc" class="text-gray-600">Track your health improvements day by day.</p>
-        </div>
-      </div>
-
-      <!-- 记录表单 -->
-      <div class="mt-12 max-w-2xl mx-auto bg-light rounded-xl p-8 shadow-md">
-        <h3 data-lang="track.formTitle" class="text-2xl font-semibold mb-6 text-center">Start Tracking Now</h3>
-        <form id="trackForm" class="space-y-4">
-          <div>
-            <label class="block text-gray-700 mb-2" for="startDate" data-lang="track.form1">Quit Start Date</label>
-            <input type="date" id="startDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
-          </div>
-          <div>
-            <label class="block text-gray-700 mb-2" for="cigPerDay" data-lang="track.form2">Cigarettes per Day (Before)</label>
-            <input type="number" id="cigPerDay" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
-          </div>
-          <div>
-            <label class="block text-gray-700 mb-2" for="pricePerPack" data-lang="track.form3">Price per Pack ($)</label>
-            <input type="number" step="0.01" id="pricePerPack" min="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
-          </div>
-          <button type="submit" data-lang="track.formBtn" class="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-primary/90 transition-colors">
-            Calculate My Progress
-          </button>
-        </form>
-
-        <!-- 结果展示区 -->
-        <div id="progressResult" class="mt-8 hidden">
-          <div class="p-4 bg-green-50 rounded-lg border border-green-200">
-            <h4 data-lang="track.resultTitle" class="font-semibold text-lg mb-2">Your Smoke-Free Progress</h4>
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <p data-lang="track.result1" class="text-gray-600">Days Quit:</p>
-                <p id="daysQuit" class="text-xl font-bold text-primary">0</p>
-              </div>
-              <div>
-                <p data-lang="track.result2" class="text-gray-600">Money Saved:</p>
-                <p id="moneySaved" class="text-xl font-bold text-secondary">$0.00</p>
-              </div>
-              <div class="col-span-2 mt-2">
-                <p data-lang="track.result3" class="text-gray-600">Health Status:</p>
-                <p id="healthStatus" class="font-medium">Your body is already starting to recover!</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -239,7 +198,7 @@
     </div>
   </footer>
 
-  <!-- 前端交互脚本 -->
-  <script src="js/script.js"></script>
+  <!-- 前端交互脚本（移到body末尾，确保DOM加载完成） -->
+  <script src="/js/script.js"></script>
 </body>
 </html>
