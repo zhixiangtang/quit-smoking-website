@@ -59,3 +59,37 @@ input:focus, textarea:focus {
 .history-item:last-child {
   border-bottom: none;
 }
+
+/* 成就卡片样式（新增） */
+.border-bronze {
+  border-color: #CD7F32 !important;
+}
+.bg-bronze\/5 {
+  background-color: rgba(205, 127, 50, 0.05) !important;
+}
+.border-silver {
+  border-color: #C0C0C0 !important;
+}
+.bg-silver\/5 {
+  background-color: rgba(192, 192, 192, 0.05) !important;
+}
+.border-gold {
+  border-color: #D4AF37 !important;
+}
+.bg-gold\/5 {
+  background-color: rgba(212, 175, 55, 0.05) !important;
+}
+.border-primary {
+  border-color: #10B981 !important;
+}
+.bg-primary\/5 {
+  background-color: rgba(16, 185, 129, 0.05) !important;
+}
+
+/* 娱乐模块样式（新增） */
+.entertainment-card {
+  transition: all 0.3s ease;
+}
+.entertainment-card:hover {
+  transform: translateY(-5px);
+}
