@@ -1,6 +1,4 @@
-// 等待DOM完全加载
 document.addEventListener('DOMContentLoaded', function() {
-  // 阶梯式鼓励语配置
   const encourageConfig = [
     { days: 0, text: "戒烟从今天开始，你已经迈出了最重要的一步！" },
     { days: 1, text: "坚持1天了！别回头，每一口放弃都是对自己的辜负！" },
@@ -16,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     { days: 730, text: "2年！香烟？那是什么垃圾？你早已站在健康之巅！" }
   ];
 
-  // 成就配置
   const achievementConfig = [
     { id: 7, name: "青铜戒烟者", color: "bronze", target: 7 },
     { id: 30, name: "白银戒烟者", color: "silver", target: 30 },
@@ -24,11 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: 365, name: "戒烟大师", color: "primary", target: 365 }
   ];
 
-  // 本地存储逻辑
   const loadSavedData = () => {
     try {
       const savedData = localStorage.getItem('quitSmokeData');
-      // 初始化默认数据
       const defaultData = {
         form: {
           startDate: '',
@@ -58,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-  // 保存数据到本地存储
   const saveData = (data) => {
     try {
       localStorage.setItem('quitSmokeData', JSON.stringify(data));
@@ -73,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-  // 加载历史记录
   const loadHistory = () => {
     const savedData = loadSavedData();
     const historyList = document.getElementById('historyList');
@@ -102,10 +95,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-  // 初始化表单
   const initForm = () => {
     const savedData = loadSavedData();
-    // 健壮性检查：确保元素存在
     const startDateEl = document.getElementById('startDate');
     const cigPerDayEl = document.getElementById('cigPerDay');
     const pricePerPackEl = document.getElementById('pricePerPack');
@@ -117,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
       if (pricePerPackEl) pricePerPackEl.value = savedData.form.pricePerPack || '';
       if (notesEl) notesEl.value = savedData.form.notes || '';
       
-      // 自动计算进度
       if (savedData.form.startDate && savedData.form.cigPerDay && savedData.form.pricePerPack) {
         calculateProgress(
           savedData.form.startDate, 
@@ -132,9 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadHistory();
   };
 
-  // 计算戒烟进度
   const calculateProgress = (startDateVal, cigPerDayVal, pricePerPackVal) => {
-    // 空值检查
     if (!startDateVal || !cigPerDayVal || !pricePerPackVal) {
       alert('请填写完整的戒烟信息！');
       return;
@@ -144,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const cigPerDay = parseInt(cigPerDayVal);
     const pricePerPack = parseFloat(pricePerPackVal);
     
-    // 合法性检查
     if (isNaN(cigPerDay) || isNaN(pricePerPack) || cigPerDay < 1 || pricePerPack < 0.01) {
       alert('请输入有效的数值！');
       return;
@@ -158,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const moneySaved = (packsPerDay * pricePerPack * daysQuit).toFixed(2);
     const cigAvoided = cigPerDay * daysQuit;
     
-    // 更新DOM
     const daysQuitEl = document.getElementById('daysQuit');
     const moneySavedEl = document.getElementById('moneySaved');
     const cigAvoidedEl = document.getElementById('cigAvoided');
@@ -172,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (totalDaysQuitEl) totalDaysQuitEl.textContent = daysQuit;
     if (totalMoneySavedEl) totalMoneySavedEl.textContent = `¥${moneySaved}`;
 
-    // 健康状态
     let healthStatus = '';
     if (daysQuit < 1) healthStatus = '今天就开启你的戒烟之旅吧！';
     else if (daysQuit < 7) healthStatus = '尼古丁正在离开你的身体 - 做得很棒！';
@@ -190,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (progressResultEl) progressResultEl.classList.remove('hidden');
   };
 
-  // 更新成就进度
   const updateAchievementProgress = (daysQuit) => {
     achievementConfig.forEach(achievement => {
       const progress = Math.min(100, (daysQuit / achievement.target) * 100);
@@ -208,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   };
 
-  // 更新鼓励语
   const updateEncourageText = (daysQuit = 0) => {
     const encourageTextEl = document.getElementById('encourageText');
     if (!encourageTextEl) return;
@@ -223,18 +206,15 @@ document.addEventListener('DOMContentLoaded', function() {
     encourageTextEl.textContent = matchedText;
   };
 
-  // 打卡功能
   const handleCheckIn = () => {
     const savedData = loadSavedData();
     const today = new Date().toISOString().split('T')[0];
     
-    // 检查是否已打卡
     if (savedData.checkIn.lastCheckInDate === today) {
       alert('今日已打卡！你超棒的，继续保持！');
       return;
     }
     
-    // 计算连续打卡天数
     const lastDate = savedData.checkIn.lastCheckInDate;
     if (lastDate) {
       const lastCheckIn = new Date(lastDate);
@@ -258,7 +238,6 @@ document.addEventListener('DOMContentLoaded', function() {
     alert('打卡成功！今天也是战胜烟瘾的一天，牛逼！');
   };
 
-  // 更新打卡UI
   const updateCheckInUI = () => {
     const savedData = loadSavedData();
     const today = new Date().toISOString().split('T')[0];
@@ -281,164 +260,4 @@ document.addEventListener('DOMContentLoaded', function() {
         checkInBtnEl.classList.remove('bg-primary');
       } else {
         checkInBtnEl.disabled = false;
-        checkInBtnEl.classList.remove('bg-gray-400');
-        checkInBtnEl.classList.add('bg-primary');
-      }
-    }
-  };
-
-  // 表单提交事件
-  const trackFormEl = document.getElementById('trackForm');
-  if (trackFormEl) {
-    trackFormEl.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const startDate = document.getElementById('startDate')?.value;
-      const cigPerDay = document.getElementById('cigPerDay')?.value;
-      const pricePerPack = document.getElementById('pricePerPack')?.value;
-      
-      // 空值检查
-      if (!startDate || !cigPerDay || !pricePerPack) {
-        alert('请填写所有必填项！');
-        return;
-      }
-      
-      calculateProgress(startDate, cigPerDay, pricePerPack);
-      
-      // 保存表单数据
-      const savedData = loadSavedData();
-      savedData.form = {
-        startDate,
-        cigPerDay,
-        pricePerPack,
-        notes: document.getElementById('notes')?.value || ''
-      };
-      
-      savedData.history.unshift({
-        date: new Date().toISOString(),
-        daysQuit: document.getElementById('daysQuit')?.textContent || '0',
-        moneySaved: document.getElementById('moneySaved')?.textContent.replace('¥', '') || '0.00',
-        cigAvoided: document.getElementById('cigAvoided')?.textContent.replace(' 支', '') || '0'
-      });
-      
-      if (savedData.history.length > 10) {
-        savedData.history = savedData.history.slice(0, 10);
-      }
-      
-      saveData(savedData);
-      
-      // 滚动到结果区
-      const progressResultEl = document.getElementById('progressResult');
-      if (progressResultEl) {
-        progressResultEl.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  }
-
-  // 保存进度按钮
-  const saveProgressEl = document.getElementById('saveProgress');
-  if (saveProgressEl) {
-    saveProgressEl.addEventListener('click', function() {
-      const startDate = document.getElementById('startDate')?.value;
-      const cigPerDay = document.getElementById('cigPerDay')?.value;
-      const pricePerPack = document.getElementById('pricePerPack')?.value;
-      
-      if (!startDate || !cigPerDay || !pricePerPack) {
-        alert('请先填写并提交戒烟信息！');
-        return;
-      }
-      
-      const savedData = loadSavedData();
-      savedData.form = {
-        startDate,
-        cigPerDay,
-        pricePerPack,
-        notes: document.getElementById('notes')?.value || ''
-      };
-      
-      savedData.history.unshift({
-        date: new Date().toISOString(),
-        daysQuit: document.getElementById('daysQuit')?.textContent || '0',
-        moneySaved: document.getElementById('moneySaved')?.textContent.replace('¥', '') || '0.00',
-        cigAvoided: document.getElementById('cigAvoided')?.textContent.replace(' 支', '') || '0'
-      });
-      
-      if (savedData.history.length > 10) {
-        savedData.history = savedData.history.slice(0, 10);
-      }
-      
-      saveData(savedData);
-    });
-  }
-
-  // 重置按钮
-  const resetProgressEl = document.getElementById('resetProgress');
-  if (resetProgressEl) {
-    resetProgressEl.addEventListener('click', function() {
-      if (confirm('确定要重置所有戒烟记录吗？此操作不可恢复！')) {
-        localStorage.removeItem('quitSmokeData');
-        
-        // 重置表单
-        const trackFormEl = document.getElementById('trackForm');
-        if (trackFormEl) trackFormEl.reset();
-        
-        // 重置UI
-        const elements = [
-          {id: 'daysQuit', val: '0'},
-          {id: 'moneySaved', val: '¥0.00'},
-          {id: 'cigAvoided', val: '0 支'},
-          {id: 'totalDaysQuit', val: '0 天'},
-          {id: 'totalMoneySaved', val: '¥0.00'},
-          {id: 'continuousDays', val: '0 天'},
-          {id: 'checkInStatus', val: '未打卡'},
-          {id: 'healthStatus', val: '你的身体正在开始恢复！'},
-          {id: 'encourageText', val: '戒烟从今天开始，你已经迈出了最重要的一步！'}
-        ];
-        
-        elements.forEach(item => {
-          const el = document.getElementById(item.id);
-          if (el) el.textContent = item.val;
-        });
-        
-        // 重置成就进度
-        achievementConfig.forEach(achievement => {
-          const progressBar = document.getElementById(`progress${achievement.id}`);
-          const progressText = document.getElementById(`progressText${achievement.id}`);
-          const achievementCard = document.getElementById(`achievement${achievement.id}`);
-          
-          if (progressBar) progressBar.style.width = '0%';
-          if (progressText) progressText.textContent = `0/${achievement.target} 天`;
-          if (achievementCard) {
-            achievementCard.classList.remove(`border-${achievement.color}`, `bg-${achievement.color}/5`);
-            achievementCard.classList.add(`border-${achievement.color}/30`);
-          }
-        });
-        
-        // 隐藏结果和历史
-        const progressResultEl = document.getElementById('progressResult');
-        const historySectionEl = document.getElementById('historySection');
-        if (progressResultEl) progressResultEl.classList.add('hidden');
-        if (historySectionEl) historySectionEl.classList.add('hidden');
-        
-        // 重置打卡按钮
-        const checkInBtnEl = document.getElementById('checkInBtn');
-        if (checkInBtnEl) {
-          checkInBtnEl.disabled = false;
-          checkInBtnEl.classList.remove('bg-gray-400');
-          checkInBtnEl.classList.add('bg-primary');
-        }
-        
-        alert('记录已重置！你可以重新开始记录戒烟旅程。');
-      }
-    });
-  }
-
-  // 打卡按钮
-  const checkInBtnEl = document.getElementById('checkInBtn');
-  if (checkInBtnEl) {
-    checkInBtnEl.addEventListener('click', handleCheckIn);
-  }
-
-  // 初始化页面
-  initForm();
-});
+        checkInBtnEl.classList.remove
