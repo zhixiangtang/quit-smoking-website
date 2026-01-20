@@ -4,13 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>戒烟助手 - 健康生活从戒烟开始</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome 图标 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- 自定义样式 -->
-  <link rel="stylesheet" href="/css/style.css">
-  <!-- 自定义主题配置 -->
+  <!-- 修复路径：加仓库名 -->
+  <link rel="stylesheet" href="/quit-smoking/css/style.css">
   <script>
     tailwind.config = {
       theme: {
@@ -32,58 +29,52 @@
   </script>
 </head>
 <body class="bg-light font-sans text-dark min-h-screen flex flex-col">
-  <!-- 导航栏 -->
   <nav class="bg-white shadow-md py-3 sticky top-0 z-50 transition-all">
     <div class="container mx-auto px-4 flex justify-between items-center">
-      <!-- Logo -->
-      <a href="/index.html" class="flex items-center gap-2">
+      <!-- 修复路径：加仓库名 -->
+      <a href="/quit-smoking/index.html" class="flex items-center gap-2">
         <i class="fa-solid fa-lungs text-primary text-2xl"></i>
         <span class="text-xl font-bold text-primary">戒烟助手</span>
       </a>
-      
-      <!-- 桌面端菜单 -->
       <div class="hidden md:flex items-center gap-6">
         <a href="#benefits" class="text-dark hover:text-primary transition-colors">戒烟好处</a>
         <a href="#tips" class="text-dark hover:text-primary transition-colors">戒烟技巧</a>
         <a href="#tools" class="text-dark hover:text-primary transition-colors">辅助工具</a>
-        <a href="/track.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+        <!-- 修复路径：加仓库名 -->
+        <a href="/quit-smoking/track.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
           <i class="fa-solid fa-chart-line mr-1"></i> 记录我的进度
         </a>
       </div>
-      
-      <!-- 移动端菜单按钮 -->
       <button id="mobileMenuBtn" class="md:hidden text-dark text-xl">
         <i class="fa-solid fa-bars"></i>
       </button>
     </div>
-    
-    <!-- 移动端菜单 -->
     <div id="mobileMenu" class="mobile-menu bg-white py-4 px-4 md:hidden">
       <div class="flex flex-col gap-4">
         <a href="#benefits" class="text-dark hover:text-primary transition-colors py-2">戒烟好处</a>
         <a href="#tips" class="text-dark hover:text-primary transition-colors py-2">戒烟技巧</a>
         <a href="#tools" class="text-dark hover:text-primary transition-colors py-2">辅助工具</a>
-        <a href="/track.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors text-center">
+        <!-- 修复路径：加仓库名 -->
+        <a href="/quit-smoking/track.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors text-center">
           <i class="fa-solid fa-chart-line mr-1"></i> 记录我的进度
         </a>
       </div>
     </div>
   </nav>
 
-  <!-- 英雄区 -->
   <section class="bg-gradient-to-br from-primary/10 to-secondary/10 py-16 md:py-24">
     <div class="container mx-auto px-4 max-w-5xl text-center">
       <h1 class="text-4xl md:text-5xl font-bold mb-6">健康生活，从戒烟开始</h1>
       <p class="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
         戒烟不仅是对自己负责，更是对家人的关爱。我们陪你一起，科学戒烟，拥抱健康人生。
       </p>
-      <a href="/track.html" class="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors shadow-lg">
+      <!-- 修复路径：加仓库名 -->
+      <a href="/quit-smoking/track.html" class="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors shadow-lg">
         开始我的戒烟旅程 <i class="fa-solid fa-arrow-right ml-2"></i>
       </a>
     </div>
   </section>
 
-  <!-- 戒烟好处 -->
   <section id="benefits" class="py-16 md:py-20">
     <div class="container mx-auto px-4 max-w-5xl">
       <div class="text-center mb-12">
@@ -119,7 +110,6 @@
     </div>
   </section>
 
-  <!-- 戒烟技巧 -->
   <section id="tips" class="py-16 md:py-20 bg-gray-50">
     <div class="container mx-auto px-4 max-w-5xl">
       <div class="text-center mb-12">
@@ -171,7 +161,6 @@
     </div>
   </section>
 
-  <!-- 辅助工具 -->
   <section id="tools" class="py-16 md:py-20">
     <div class="container mx-auto px-4 max-w-5xl">
       <div class="text-center mb-12">
@@ -180,7 +169,8 @@
       </div>
       
       <div class="grid md:grid-cols-3 gap-8">
-        <a href="/track.html" class="group">
+        <!-- 修复路径：加仓库名 -->
+        <a href="/quit-smoking/track.html" class="group">
           <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all text-center h-full">
             <div class="text-secondary text-4xl mb-4 group-hover:scale-110 transition-transform">
               <i class="fa-solid fa-chart-line"></i>
@@ -191,7 +181,8 @@
           </div>
         </a>
         
-        <a href="/entertainment/games.html" target="_blank" class="group">
+        <!-- 修复路径：加仓库名 -->
+        <a href="/quit-smoking/entertainment/games.html" target="_blank" class="group">
           <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all text-center h-full">
             <div class="text-accent text-4xl mb-4 group-hover:scale-110 transition-transform">
               <i class="fa-solid fa-gamepad"></i>
@@ -202,7 +193,8 @@
           </div>
         </a>
         
-        <a href="/entertainment/music.html" target="_blank" class="group">
+        <!-- 修复路径：加仓库名 -->
+        <a href="/quit-smoking/entertainment/music.html" target="_blank" class="group">
           <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all text-center h-full">
             <div class="text-primary text-4xl mb-4 group-hover:scale-110 transition-transform">
               <i class="fa-solid fa-music"></i>
@@ -216,22 +208,22 @@
     </div>
   </section>
 
-  <!-- 页脚 -->
   <footer class="bg-dark text-white py-8 mt-auto">
     <div class="container mx-auto px-4 max-w-5xl">
       <div class="text-center text-sm text-gray-400">
         <p class="mb-4">© 2026 戒烟助手 版权所有</p>
         <p>本网站仅提供戒烟辅助工具，如有戒烟困难请咨询专业医生</p>
         <div class="mt-4">
-          <a href="/index.html" class="text-primary hover:underline mx-2">首页</a>
-          <a href="/track.html" class="text-primary hover:underline mx-2">记录进度</a>
-          <a href="/404.html" class="text-primary hover:underline mx-2">404页面</a>
+          <!-- 修复路径：加仓库名 -->
+          <a href="/quit-smoking/index.html" class="text-primary hover:underline mx-2">首页</a>
+          <a href="/quit-smoking/track.html" class="text-primary hover:underline mx-2">记录进度</a>
+          <a href="/quit-smoking/404.html" class="text-primary hover:underline mx-2">404页面</a>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- 主页交互脚本 -->
-  <script src="/js/index-script.js"></script>
+  <!-- 修复路径：加仓库名 -->
+  <script src="/quit-smoking/js/index-script.js"></script>
 </body>
 </html>
