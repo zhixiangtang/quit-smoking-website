@@ -13,27 +13,34 @@ html {
   animation: fadeIn 0.5s ease-in-out;
 }
 
-/* 响应式导航菜单（移动端） */
+/* 移动端菜单样式 */
+.mobile-menu {
+  display: none;
+}
+
+.mobile-menu.active {
+  display: block;
+}
+
+.mobile-menu a {
+  color: #1F2937;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.mobile-menu a:hover {
+  color: #10B981;
+}
+
+/* 响应式适配 */
 @media (max-width: 768px) {
   .mobile-menu {
-    display: none;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
     background: white;
-    padding: 1rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-  
-  .mobile-menu.active {
-    display: block;
-  }
-  
-  .mobile-menu a {
-    display: block;
-    padding: 0.5rem 0;
-    color: #1F2937;
-    text-decoration: none;
+    z-index: 99;
   }
 }
