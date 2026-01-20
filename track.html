@@ -8,8 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome 图标 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- 修复路径：使用根路径 / 适配GitHub Pages -->
+  <!-- 自定义样式 -->
   <link rel="stylesheet" href="/css/style.css">
+  <!-- 自定义主题 -->
   <script>
     tailwind.config = {
       theme: {
@@ -34,19 +35,22 @@
   </script>
 </head>
 <body class="bg-light font-sans text-dark min-h-screen flex flex-col">
-  <!-- 导航栏：修复返回首页路径 -->
+  <!-- 导航栏 -->
   <nav class="sticky top-0 bg-white shadow-md z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <!-- Logo - 跳转主页 -->
       <a href="/index.html" class="flex items-center gap-2">
         <i class="fa-solid fa-lungs text-primary text-2xl"></i>
         <span class="text-xl font-bold text-primary">戒烟助手</span>
       </a>
+      <!-- 返回主页按钮 -->
       <a href="/index.html" class="text-primary hover:text-primary/80 transition-colors">
         <i class="fa-solid fa-home mr-1"></i> 返回首页
       </a>
     </div>
   </nav>
 
+  <!-- 戒烟记录主区域 -->
   <section class="flex-grow py-12 md:py-16 container mx-auto px-4 max-w-5xl">
     <div class="text-center mb-10">
       <h1 class="text-3xl md:text-4xl font-bold mb-4">我的戒烟旅程</h1>
@@ -56,6 +60,7 @@
     <!-- 核心数据概览 -->
     <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-8">
       <div class="grid md:grid-cols-4 gap-4 mb-6">
+        <!-- 今日打卡状态 -->
         <div class="text-center p-4 bg-primary/5 rounded-lg">
           <p class="text-gray-600 mb-1">今日打卡</p>
           <p id="checkInStatus" class="text-xl font-bold text-primary">未打卡</p>
@@ -63,20 +68,24 @@
             <i class="fa-solid fa-check mr-1"></i> 立即打卡
           </button>
         </div>
+        <!-- 连续打卡天数 -->
         <div class="text-center p-4 bg-accent/5 rounded-lg">
           <p class="text-gray-600 mb-1">连续打卡</p>
           <p id="continuousDays" class="text-2xl font-bold text-accent">0 天</p>
         </div>
+        <!-- 总无烟天数 -->
         <div class="text-center p-4 bg-secondary/5 rounded-lg">
           <p class="text-gray-600 mb-1">总无烟天数</p>
           <p id="totalDaysQuit" class="text-2xl font-bold text-secondary">0 天</p>
         </div>
+        <!-- 累计节省金额 -->
         <div class="text-center p-4 bg-green-50 rounded-lg">
           <p class="text-gray-600 mb-1">累计节省</p>
           <p id="totalMoneySaved" class="text-2xl font-bold text-green-600">¥0.00</p>
         </div>
       </div>
 
+      <!-- 今日鼓励语 -->
       <div class="p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg text-center">
         <h3 class="font-semibold mb-2">今日鼓励</h3>
         <p id="encourageText" class="text-lg font-medium">戒烟从今天开始，你已经迈出了最重要的一步！</p>
@@ -116,6 +125,7 @@
     <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-8">
       <h3 class="font-semibold text-xl mb-6 text-center">成就目标计划</h3>
       <div class="grid md:grid-cols-3 gap-6">
+        <!-- 青铜成就：7天 -->
         <div id="achievement7" class="border-2 border-bronze/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
           <div class="text-bronze text-4xl mb-3">
             <i class="fa-solid fa-medal"></i>
@@ -127,6 +137,7 @@
           </div>
           <p id="progressText7" class="text-sm text-gray-500">0/7 天</p>
         </div>
+        <!-- 白银成就：30天 -->
         <div id="achievement30" class="border-2 border-silver/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
           <div class="text-silver text-4xl mb-3">
             <i class="fa-solid fa-medal"></i>
@@ -138,6 +149,7 @@
           </div>
           <p id="progressText30" class="text-sm text-gray-500">0/30 天</p>
         </div>
+        <!-- 黄金成就：100天 -->
         <div id="achievement100" class="border-2 border-gold/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
           <div class="text-gold text-4xl mb-3">
             <i class="fa-solid fa-medal"></i>
@@ -150,6 +162,7 @@
           <p id="progressText100" class="text-sm text-gray-500">0/100 天</p>
         </div>
       </div>
+      <!-- 终极成就 -->
       <div id="achievement365" class="mt-6 border-2 border-primary/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
         <div class="text-primary text-4xl mb-3">
           <i class="fa-solid fa-trophy"></i>
@@ -163,12 +176,13 @@
       </div>
     </div>
 
-    <!-- 消遣娱乐模块：修复子页面路径 -->
+    <!-- 消遣娱乐模块 -->
     <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-8">
       <h3 class="font-semibold text-xl mb-6 text-center">烟瘾缓解 - 消遣娱乐</h3>
       <p class="text-gray-600 text-center mb-6">烟瘾来袭时，用这些方式转移注意力，轻松度过难熬时刻！</p>
       
       <div class="grid md:grid-cols-3 gap-6">
+        <!-- 小游戏专区 -->
         <a href="/entertainment/games.html" target="_blank" class="group">
           <div class="bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-6 text-center hover:shadow-lg transition-all h-full">
             <div class="text-accent text-4xl mb-4 group-hover:scale-110 transition-transform">
@@ -179,6 +193,7 @@
             <p class="mt-4 text-accent text-sm group-hover:underline">点击进入 <i class="fa-solid fa-arrow-right ml-1"></i></p>
           </div>
         </a>
+        <!-- 舒缓音乐 -->
         <a href="/entertainment/music.html" target="_blank" class="group">
           <div class="bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl p-6 text-center hover:shadow-lg transition-all h-full">
             <div class="text-secondary text-4xl mb-4 group-hover:scale-110 transition-transform">
@@ -189,6 +204,7 @@
             <p class="mt-4 text-secondary text-sm group-hover:underline">点击进入 <i class="fa-solid fa-arrow-right ml-1"></i></p>
           </div>
         </a>
+        <!-- 阅读专区 -->
         <a href="/entertainment/reading.html" target="_blank" class="group">
           <div class="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-6 text-center hover:shadow-lg transition-all h-full">
             <div class="text-primary text-4xl mb-4 group-hover:scale-110 transition-transform">
@@ -239,18 +255,19 @@
     <div id="historySection" class="bg-white rounded-xl p-6 md:p-8 shadow-md mt-8 hidden">
       <h3 class="font-semibold text-xl mb-4">打卡历史记录</h3>
       <div id="historyList" class="space-y-4">
+        <!-- 历史记录由JS动态生成 -->
       </div>
     </div>
   </section>
 
-  <!-- 页脚：修复返回首页路径 -->
+  <!-- 页脚 -->
   <footer class="bg-dark text-white py-6 mt-auto">
     <div class="container mx-auto px-4 text-center text-sm text-gray-400">
       © 2026 戒烟助手 版权所有 | <a href="/index.html" class="text-primary hover:underline">返回首页</a>
     </div>
   </footer>
 
-  <!-- 修复脚本路径 -->
+  <!-- 记录页交互脚本 -->
   <script src="/js/track-script.js"></script>
 </body>
 </html>
