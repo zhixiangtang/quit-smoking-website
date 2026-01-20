@@ -1,6 +1,10 @@
-/* 平滑滚动 */
+/* 基础样式 */
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 /* 自定义动画 */
@@ -21,6 +25,7 @@ html {
   left: 0;
   right: 0;
   z-index: 99;
+  background-color: white;
 }
 
 .mobile-menu.active {
@@ -60,7 +65,7 @@ input:focus, textarea:focus {
   border-bottom: none;
 }
 
-/* 成就卡片样式（新增） */
+/* 成就卡片样式 */
 .border-bronze {
   border-color: #CD7F32 !important;
 }
@@ -86,7 +91,7 @@ input:focus, textarea:focus {
   background-color: rgba(16, 185, 129, 0.05) !important;
 }
 
-/* 娱乐模块样式（新增） */
+/* 娱乐模块样式 */
 .entertainment-card {
   transition: all 0.3s ease;
 }
