@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>戒烟助手 - 健康生活从戒烟开始</title>
+  <title>我的戒烟旅程 - 戒烟助手</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- 修复路径：加仓库名 -->
-  <link rel="stylesheet" href="/quit-smoking/css/style.css">
+  <link rel="stylesheet" href="/quit-smoking-website/css/style.css">
   <script>
     tailwind.config = {
       theme: {
@@ -18,7 +17,10 @@
             accent: '#F59E0B',
             danger: '#EF4444',
             dark: '#1F2937',
-            light: '#F9FAFB'
+            light: '#F9FAFB',
+            gold: '#D4AF37',    
+            silver: '#C0C0C0',  
+            bronze: '#CD7F32'   
           },
           fontFamily: {
             sans: ['PingFang SC', 'Microsoft YaHei', 'sans-serif'],
@@ -29,201 +31,214 @@
   </script>
 </head>
 <body class="bg-light font-sans text-dark min-h-screen flex flex-col">
-  <nav class="bg-white shadow-md py-3 sticky top-0 z-50 transition-all">
-    <div class="container mx-auto px-4 flex justify-between items-center">
-      <!-- 修复路径：加仓库名 -->
-      <a href="/quit-smoking/index.html" class="flex items-center gap-2">
+  <nav class="sticky top-0 bg-white shadow-md z-50">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="/quit-smoking-website/index.html" class="flex items-center gap-2">
         <i class="fa-solid fa-lungs text-primary text-2xl"></i>
         <span class="text-xl font-bold text-primary">戒烟助手</span>
       </a>
-      <div class="hidden md:flex items-center gap-6">
-        <a href="#benefits" class="text-dark hover:text-primary transition-colors">戒烟好处</a>
-        <a href="#tips" class="text-dark hover:text-primary transition-colors">戒烟技巧</a>
-        <a href="#tools" class="text-dark hover:text-primary transition-colors">辅助工具</a>
-        <!-- 修复路径：加仓库名 -->
-        <a href="/quit-smoking/track.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-          <i class="fa-solid fa-chart-line mr-1"></i> 记录我的进度
-        </a>
-      </div>
-      <button id="mobileMenuBtn" class="md:hidden text-dark text-xl">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-    </div>
-    <div id="mobileMenu" class="mobile-menu bg-white py-4 px-4 md:hidden">
-      <div class="flex flex-col gap-4">
-        <a href="#benefits" class="text-dark hover:text-primary transition-colors py-2">戒烟好处</a>
-        <a href="#tips" class="text-dark hover:text-primary transition-colors py-2">戒烟技巧</a>
-        <a href="#tools" class="text-dark hover:text-primary transition-colors py-2">辅助工具</a>
-        <!-- 修复路径：加仓库名 -->
-        <a href="/quit-smoking/track.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors text-center">
-          <i class="fa-solid fa-chart-line mr-1"></i> 记录我的进度
-        </a>
-      </div>
+      <a href="/quit-smoking-website/index.html" class="text-primary hover:text-primary/80 transition-colors">
+        <i class="fa-solid fa-home mr-1"></i> 返回首页
+      </a>
     </div>
   </nav>
 
-  <section class="bg-gradient-to-br from-primary/10 to-secondary/10 py-16 md:py-24">
-    <div class="container mx-auto px-4 max-w-5xl text-center">
-      <h1 class="text-4xl md:text-5xl font-bold mb-6">健康生活，从戒烟开始</h1>
-      <p class="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
-        戒烟不仅是对自己负责，更是对家人的关爱。我们陪你一起，科学戒烟，拥抱健康人生。
-      </p>
-      <!-- 修复路径：加仓库名 -->
-      <a href="/quit-smoking/track.html" class="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors shadow-lg">
-        开始我的戒烟旅程 <i class="fa-solid fa-arrow-right ml-2"></i>
-      </a>
+  <section class="flex-grow py-12 md:py-16 container mx-auto px-4 max-w-5xl">
+    <div class="text-center mb-10">
+      <h1 class="text-3xl md:text-4xl font-bold mb-4">我的戒烟旅程</h1>
+      <p class="text-gray-600">记录每一步坚持，解锁成就，战胜烟瘾！</p>
     </div>
-  </section>
 
-  <section id="benefits" class="py-16 md:py-20">
-    <div class="container mx-auto px-4 max-w-5xl">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold mb-4">戒烟带来的改变</h2>
-        <p class="text-gray-600">每坚持一天，你的身体都在变得更健康</p>
+    <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-8">
+      <div class="grid md:grid-cols-4 gap-4 mb-6">
+        <div class="text-center p-4 bg-primary/5 rounded-lg">
+          <p class="text-gray-600 mb-1">今日打卡</p>
+          <p id="checkInStatus" class="text-xl font-bold text-primary">未打卡</p>
+          <button id="checkInBtn" class="mt-2 px-3 py-1 bg-primary text-white rounded text-sm hover:bg-primary/90 transition-colors">
+            <i class="fa-solid fa-check mr-1"></i> 立即打卡
+          </button>
+        </div>
+        <div class="text-center p-4 bg-accent/5 rounded-lg">
+          <p class="text-gray-600 mb-1">连续打卡</p>
+          <p id="continuousDays" class="text-2xl font-bold text-accent">0 天</p>
+        </div>
+        <div class="text-center p-4 bg-secondary/5 rounded-lg">
+          <p class="text-gray-600 mb-1">总无烟天数</p>
+          <p id="totalDaysQuit" class="text-2xl font-bold text-secondary">0 天</p>
+        </div>
+        <div class="text-center p-4 bg-green-50 rounded-lg">
+          <p class="text-gray-600 mb-1">累计节省</p>
+          <p id="totalMoneySaved" class="text-2xl font-bold text-green-600">¥0.00</p>
+        </div>
       </div>
-      
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
-          <div class="text-primary text-4xl mb-4">
-            <i class="fa-solid fa-heart-pulse"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-3">心血管健康</h3>
-          <p class="text-gray-600">20分钟后：心率和血压恢复正常；1年后：心脏病风险降低一半。</p>
-        </div>
-        
-        <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
-          <div class="text-primary text-4xl mb-4">
-            <i class="fa-solid fa-lungs"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-3">呼吸系统改善</h3>
-          <p class="text-gray-600">2周后：肺功能提升；10年後：肺癌风险降至吸烟者的一半。</p>
-        </div>
-        
-        <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
-          <div class="text-primary text-4xl mb-4">
-            <i class="fa-solid fa-wallet"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-3">经济收益</h3>
-          <p class="text-gray-600">每天省20元，一年可省7300元，可用于旅行、购物，提升生活品质。</p>
-        </div>
+
+      <div class="p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg text-center">
+        <h3 class="font-semibold mb-2">今日鼓励</h3>
+        <p id="encourageText" class="text-lg font-medium">戒烟从今天开始，你已经迈出了最重要的一步！</p>
       </div>
     </div>
-  </section>
 
-  <section id="tips" class="py-16 md:py-20 bg-gray-50">
-    <div class="container mx-auto px-4 max-w-5xl">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold mb-4">实用戒烟技巧</h2>
-        <p class="text-gray-600">科学方法，让戒烟不再难</p>
+    <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-8">
+      <form id="trackForm" class="space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="col-span-2">
+            <label class="block text-gray-700 mb-2" for="startDate">戒烟开始日期 <span class="text-danger">*</span></label>
+            <input type="date" id="startDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-2" for="cigPerDay">戒烟前每日吸烟量（支） <span class="text-danger">*</span></label>
+            <input type="number" id="cigPerDay" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required placeholder="例如：20">
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-2" for="pricePerPack">每包香烟价格（元） <span class="text-danger">*</span></label>
+            <input type="number" step="0.01" id="pricePerPack" min="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required placeholder="例如：25">
+          </div>
+          <div class="col-span-2">
+            <label class="block text-gray-700 mb-2" for="notes">个人戒烟目标/备注（可选）</label>
+            <textarea id="notes" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="例如：为了家人的健康，坚持3个月不吸烟..."></textarea>
+          </div>
+          <div class="col-span-2">
+            <button type="submit" class="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-primary/90 transition-colors">
+              计算我的戒烟进度
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-8">
+      <h3 class="font-semibold text-xl mb-6 text-center">成就目标计划</h3>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div id="achievement7" class="border-2 border-bronze/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
+          <div class="text-bronze text-4xl mb-3">
+            <i class="fa-solid fa-medal"></i>
+          </div>
+          <h4 class="font-semibold mb-2">青铜戒烟者</h4>
+          <p class="text-gray-600 text-sm mb-3">连续无烟7天</p>
+          <div class="h-2 bg-gray-200 rounded-full mb-2">
+            <div id="progress7" class="h-2 bg-bronze rounded-full" style="width: 0%"></div>
+          </div>
+          <p id="progressText7" class="text-sm text-gray-500">0/7 天</p>
+        </div>
+        <div id="achievement30" class="border-2 border-silver/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
+          <div class="text-silver text-4xl mb-3">
+            <i class="fa-solid fa-medal"></i>
+          </div>
+          <h4 class="font-semibold mb-2">白银戒烟者</h4>
+          <p class="text-gray-600 text-sm mb-3">连续无烟30天</p>
+          <div class="h-2 bg-gray-200 rounded-full mb-2">
+            <div id="progress30" class="h-2 bg-silver rounded-full" style="width: 0%"></div>
+          </div>
+          <p id="progressText30" class="text-sm text-gray-500">0/30 天</p>
+        </div>
+        <div id="achievement100" class="border-2 border-gold/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
+          <div class="text-gold text-4xl mb-3">
+            <i class="fa-solid fa-medal"></i>
+          </div>
+          <h4 class="font-semibold mb-2">黄金戒烟者</h4>
+          <p class="text-gray-600 text-sm mb-3">连续无烟100天</p>
+          <div class="h-2 bg-gray-200 rounded-full mb-2">
+            <div id="progress100" class="h-2 bg-gold rounded-full" style="width: 0%"></div>
+          </div>
+          <p id="progressText100" class="text-sm text-gray-500">0/100 天</p>
+        </div>
       </div>
-      
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all flex gap-4">
-          <div class="text-accent text-3xl mt-1">
-            <i class="fa-solid fa-calendar-check"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold mb-2">设定戒烟日期</h3>
-            <p class="text-gray-600">选择一个有意义的日期（如生日、纪念日），提前做好心理准备。</p>
-          </div>
+      <div id="achievement365" class="mt-6 border-2 border-primary/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
+        <div class="text-primary text-4xl mb-3">
+          <i class="fa-solid fa-trophy"></i>
         </div>
-        
-        <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all flex gap-4">
-          <div class="text-accent text-3xl mt-1">
-            <i class="fa-solid fa-handshake-angle"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold mb-2">寻求家人支持</h3>
-            <p class="text-gray-600">告诉家人你的戒烟计划，获得他们的鼓励和监督，成功率提升50%。</p>
-          </div>
+        <h4 class="font-semibold mb-2">戒烟大师</h4>
+        <p class="text-gray-600 text-sm mb-3">连续无烟365天（成功戒烟！）</p>
+        <div class="h-2 bg-gray-200 rounded-full mb-2">
+          <div id="progress365" class="h-2 bg-primary rounded-full" style="width: 0%"></div>
         </div>
-        
-        <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all flex gap-4">
-          <div class="text-accent text-3xl mt-1">
-            <i class="fa-solid fa-dumbbell"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold mb-2">转移注意力</h3>
-            <p class="text-gray-600">烟瘾来袭时，尝试喝水、散步、嚼口香糖，或玩会儿小游戏。</p>
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all flex gap-4">
-          <div class="text-accent text-3xl mt-1">
-            <i class="fa-solid fa-trophy"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold mb-2">奖励自己</h3>
-            <p class="text-gray-600">把省下的钱存起来，达到小目标时奖励自己，保持戒烟动力。</p>
-          </div>
-        </div>
+        <p id="progressText365" class="text-sm text-gray-500">0/365 天</p>
       </div>
     </div>
-  </section>
 
-  <section id="tools" class="py-16 md:py-20">
-    <div class="container mx-auto px-4 max-w-5xl">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold mb-4">戒烟辅助工具</h2>
-        <p class="text-gray-600">用好这些工具，让戒烟更轻松</p>
-      </div>
-      
-      <div class="grid md:grid-cols-3 gap-8">
-        <!-- 修复路径：加仓库名 -->
-        <a href="/quit-smoking/track.html" class="group">
-          <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all text-center h-full">
-            <div class="text-secondary text-4xl mb-4 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-chart-line"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-2">戒烟进度记录</h3>
-            <p class="text-gray-600 mb-4">记录戒烟天数、节省金额，查看身体恢复进度</p>
-            <span class="text-secondary group-hover:underline">立即使用 <i class="fa-solid fa-arrow-right ml-1"></i></span>
-          </div>
-        </a>
-        
-        <!-- 修复路径：加仓库名 -->
-        <a href="/quit-smoking/entertainment/games.html" target="_blank" class="group">
-          <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all text-center h-full">
+    <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-8">
+      <h3 class="font-semibold text-xl mb-6 text-center">烟瘾缓解 - 消遣娱乐</h3>
+      <p class="text-gray-600 text-center mb-6">烟瘾来袭时，用这些方式转移注意力，轻松度过难熬时刻！</p>
+      <div class="grid md:grid-cols-3 gap-6">
+        <a href="/quit-smoking-website/entertainment/games.html" target="_blank" class="group">
+          <div class="bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-6 text-center hover:shadow-lg transition-all h-full">
             <div class="text-accent text-4xl mb-4 group-hover:scale-110 transition-transform">
               <i class="fa-solid fa-gamepad"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-2">烟瘾缓解小游戏</h3>
-            <p class="text-gray-600 mb-4">烟瘾来袭时，玩会儿小游戏转移注意力</p>
-            <span class="text-accent group-hover:underline">立即体验 <i class="fa-solid fa-arrow-right ml-1"></i></span>
+            <h4 class="font-semibold mb-2">小游戏专区</h4>
+            <p class="text-gray-600 text-sm">休闲小游戏，转移烟瘾注意力</p>
+            <p class="mt-4 text-accent text-sm group-hover:underline">点击进入 <i class="fa-solid fa-arrow-right ml-1"></i></p>
           </div>
         </a>
-        
-        <!-- 修复路径：加仓库名 -->
-        <a href="/quit-smoking/entertainment/music.html" target="_blank" class="group">
-          <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all text-center h-full">
-            <div class="text-primary text-4xl mb-4 group-hover:scale-110 transition-transform">
+        <a href="/quit-smoking-website/entertainment/music.html" target="_blank" class="group">
+          <div class="bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl p-6 text-center hover:shadow-lg transition-all h-full">
+            <div class="text-secondary text-4xl mb-4 group-hover:scale-110 transition-transform">
               <i class="fa-solid fa-music"></i>
             </div>
-            <h3 class="text-xl font-semibold mb-2">舒缓音乐专区</h3>
-            <p class="text-gray-600 mb-4">放松音乐，缓解戒烟焦虑和压力</p>
-            <span class="text-primary group-hover:underline">立即收听 <i class="fa-solid fa-arrow-right ml-1"></i></span>
+            <h4 class="font-semibold mb-2">舒缓音乐</h4>
+            <p class="text-gray-600 text-sm">放松音乐，缓解戒烟焦虑</p>
+            <p class="mt-4 text-secondary text-sm group-hover:underline">点击进入 <i class="fa-solid fa-arrow-right ml-1"></i></p>
           </div>
         </a>
+        <a href="/quit-smoking-website/entertainment/reading.html" target="_blank" class="group">
+          <div class="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-6 text-center hover:shadow-lg transition-all h-full">
+            <div class="text-primary text-4xl mb-4 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
+            <h4 class="font-semibold mb-2">阅读专区</h4>
+            <p class="text-gray-600 text-sm">优质文章，充实戒烟时光</p>
+            <p class="mt-4 text-primary text-sm group-hover:underline">点击进入 <i class="fa-solid fa-arrow-right ml-1"></i></p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div id="progressResult" class="bg-white rounded-xl p-6 md:p-8 shadow-md hidden">
+      <h3 class="font-semibold text-xl mb-6 text-center">你的戒烟成果</h3>
+      <div class="grid md:grid-cols-3 gap-6 mb-6">
+        <div class="text-center p-4 bg-primary/5 rounded-lg">
+          <p class="text-gray-600 mb-1">无烟天数</p>
+          <p id="daysQuit" class="text-3xl font-bold text-primary">0</p>
+        </div>
+        <div class="text-center p-4 bg-secondary/5 rounded-lg">
+          <p class="text-gray-600 mb-1">节省金额</p>
+          <p id="moneySaved" class="text-3xl font-bold text-secondary">¥0.00</p>
+        </div>
+        <div class="text-center p-4 bg-accent/5 rounded-lg">
+          <p class="text-gray-600 mb-1">少抽香烟</p>
+          <p id="cigAvoided" class="text-3xl font-bold text-accent">0 支</p>
+        </div>
+      </div>
+      <div class="mb-6">
+        <p class="text-gray-600 mb-2">健康状态：</p>
+        <p id="healthStatus" class="font-medium text-lg p-3 bg-green-50 rounded-lg border border-green-200">
+          你的身体正在开始恢复！
+        </p>
+      </div>
+      <div class="flex justify-center gap-4">
+        <button id="saveProgress" class="bg-secondary text-white px-6 py-2 rounded-lg hover:bg-secondary/90 transition-colors">
+          <i class="fa-solid fa-save mr-2"></i> 保存我的进度
+        </button>
+        <button id="resetProgress" class="bg-gray-200 text-dark px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors">
+          <i class="fa-solid fa-refresh mr-2"></i> 重置记录
+        </button>
+      </div>
+    </div>
+
+    <div id="historySection" class="bg-white rounded-xl p-6 md:p-8 shadow-md mt-8 hidden">
+      <h3 class="font-semibold text-xl mb-4">打卡历史记录</h3>
+      <div id="historyList" class="space-y-4">
       </div>
     </div>
   </section>
 
-  <footer class="bg-dark text-white py-8 mt-auto">
-    <div class="container mx-auto px-4 max-w-5xl">
-      <div class="text-center text-sm text-gray-400">
-        <p class="mb-4">© 2026 戒烟助手 版权所有</p>
-        <p>本网站仅提供戒烟辅助工具，如有戒烟困难请咨询专业医生</p>
-        <div class="mt-4">
-          <!-- 修复路径：加仓库名 -->
-          <a href="/quit-smoking/index.html" class="text-primary hover:underline mx-2">首页</a>
-          <a href="/quit-smoking/track.html" class="text-primary hover:underline mx-2">记录进度</a>
-          <a href="/quit-smoking/404.html" class="text-primary hover:underline mx-2">404页面</a>
-        </div>
-      </div>
+  <footer class="bg-dark text-white py-6 mt-auto">
+    <div class="container mx-auto px-4 text-center text-sm text-gray-400">
+      © 2026 戒烟助手 版权所有 | 
+      <a href="/quit-smoking-website/index.html" class="text-primary hover:underline">返回首页</a>
     </div>
   </footer>
 
-  <!-- 修复路径：加仓库名 -->
-  <script src="/quit-smoking/js/index-script.js"></script>
+  <script src="/quit-smoking-website/js/track-script.js"></script>
 </body>
 </html>
