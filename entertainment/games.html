@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小游戏专区 - 戒烟助手</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome 图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#10B981',
+            accent: '#F59E0B',
+            dark: '#1F2937'
+          },
+          fontFamily: {
+            sans: ['PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- 导航栏 -->
+  <nav class="bg-white shadow-md py-3">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="../index.html" class="flex items-center gap-2 text-primary">
+        <i class="fa-solid fa-lungs text-xl"></i>
+        <span class="font-bold">戒烟助手</span>
+      </a>
+      <a href="../track.html" class="text-accent hover:text-accent/80">
+        <i class="fa-solid fa-arrow-left mr-1"></i> 返回戒烟记录
+      </a>
+    </div>
+  </nav>
 
+  <!-- 小游戏专区 -->
+  <section class="py-12 container mx-auto px-4 max-w-4xl">
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold mb-2 text-accent">
+        <i class="fa-solid fa-gamepad mr-2"></i> 小游戏专区
+      </h1>
+      <p class="text-gray-600">烟瘾来袭？玩会儿小游戏，轻松转移注意力！</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- 休闲小游戏1 -->
+      <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
+        <h3 class="font-semibold text-xl mb-3">消消乐</h3>
+        <p class="text-gray-600 mb-4">经典消除游戏，打发时间，缓解烟瘾焦虑</p>
+        <a href="https://www.4399.com/flash/12345.htm" target="_blank" class="inline-block bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors">
+          立即游玩 <i class="fa-solid fa-external-link ml-1"></i>
+        </a>
+      </div>
+      <!-- 休闲小游戏2 -->
+      <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
+        <h3 class="font-semibold text-xl mb-3">2048</h3>
+        <p class="text-gray-600 mb-4">数字合成游戏，锻炼思维，忘记吸烟</p>
+        <a href="https://play2048.co/" target="_blank" class="inline-block bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors">
+          立即游玩 <i class="fa-solid fa-external-link ml-1"></i>
+        </a>
+      </div>
+      <!-- 休闲小游戏3 -->
+      <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
+        <h3 class="font-semibold text-xl mb-3">五子棋</h3>
+        <p class="text-gray-600 mb-4">经典棋类游戏，专注思考，远离烟瘾</p>
+        <a href="https://www.4399.com/flash/109807.htm" target="_blank" class="inline-block bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors">
+          立即游玩 <i class="fa-solid fa-external-link ml-1"></i>
+        </a>
+      </div>
+      <!-- 休闲小游戏4 -->
+      <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
+        <h3 class="font-semibold text-xl mb-3">拼图游戏</h3>
+        <p class="text-gray-600 mb-4">趣味拼图，锻炼耐心，轻松度过烟瘾期</p>
+        <a href="https://www.4399.com/flash/110330.htm" target="_blank" class="inline-block bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors">
+          立即游玩 <i class="fa-solid fa-external-link ml-1"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-8 bg-white rounded-xl p-6 shadow-md text-center">
+      <p class="text-gray-600 mb-4">提示：游戏仅用于转移烟瘾注意力，适度游玩更健康哦！</p>
+      <a href="../track.html" class="inline-block bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+        <i class="fa-solid fa-arrow-left mr-1"></i> 返回戒烟记录
+      </a>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-6 mt-12">
+    <div class="container mx-auto px-4 text-center text-sm text-gray-400">
+      © 2026 戒烟助手 版权所有 | 游戏资源均为第三方提供，仅供休闲使用
+    </div>
+  </footer>
+</body>
+</html>
