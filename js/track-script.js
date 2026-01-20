@@ -24,11 +24,11 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: 365, name: "戒烟大师", color: "primary", target: 365 }
   ];
 
-  // ========== 核心修复：本地存储逻辑 ==========
+  // 本地存储逻辑
   const loadSavedData = () => {
     try {
       const savedData = localStorage.getItem('quitSmokeData');
-      // 初始化默认数据，防止空值报错
+      // 初始化默认数据
       const defaultData = {
         form: {
           startDate: '',
@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
       return savedData ? JSON.parse(savedData) : defaultData;
     } catch (e) {
       console.error('加载数据失败:', e);
-      // 出错时返回默认数据
       return {
         form: {},
         history: [],
@@ -133,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadHistory();
   };
 
-  // 计算戒烟进度（核心修复：空值检查）
+  // 计算戒烟进度
   const calculateProgress = (startDateVal, cigPerDayVal, pricePerPackVal) => {
     // 空值检查
     if (!startDateVal || !cigPerDayVal || !pricePerPackVal) {
@@ -159,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const moneySaved = (packsPerDay * pricePerPack * daysQuit).toFixed(2);
     const cigAvoided = cigPerDay * daysQuit;
     
-    // 更新DOM（做存在性检查）
+    // 更新DOM
     const daysQuitEl = document.getElementById('daysQuit');
     const moneySavedEl = document.getElementById('moneySaved');
     const cigAvoidedEl = document.getElementById('cigAvoided');
@@ -224,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
     encourageTextEl.textContent = matchedText;
   };
 
-  // ========== 修复：打卡功能 ==========
+  // 打卡功能
   const handleCheckIn = () => {
     const savedData = loadSavedData();
     const today = new Date().toISOString().split('T')[0];
@@ -288,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-  // ========== 修复：表单提交事件 ==========
+  // 表单提交事件
   const trackFormEl = document.getElementById('trackForm');
   if (trackFormEl) {
     trackFormEl.addEventListener('submit', function(e) {
@@ -336,7 +335,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // ========== 绑定按钮事件（做存在性检查） ==========
   // 保存进度按钮
   const saveProgressEl = document.getElementById('saveProgress');
   if (saveProgressEl) {
