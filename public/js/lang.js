@@ -1,6 +1,5 @@
-// public/js/lang.js
-const lang = {
-  // 英文
+// 全局多语言配置
+window.lang = {
   en: {
     nav: {
       track: "Track Journey",
@@ -22,14 +21,18 @@ const lang = {
       card3: "Health Progress",
       card3Desc: "Track your health improvements day by day.",
       formTitle: "Start Tracking Now",
+      desc: "Fill in the information below to track your smoke-free journey and see your progress",
       form1: "Quit Start Date",
       form2: "Cigarettes per Day (Before)",
-      form3: "Price per Pack ($)",
+      form3: "Price per Pack",
+      notes: "Personal Notes (Optional)",
       formBtn: "Calculate My Progress",
       resultTitle: "Your Smoke-Free Progress",
       result1: "Days Quit:",
       result2: "Money Saved:",
-      result3: "Health Status:"
+      cigAvoided: "Cigarettes Avoided:",
+      result3: "Health Status:",
+      saveBtn: "Save My Progress"
     },
     tips: {
       title: "Useful Quit Smoking Tips",
@@ -54,7 +57,6 @@ const lang = {
     },
     footer: "Global Quit Smoking Platform"
   },
-  // 中文
   zh: {
     nav: {
       track: "追踪进度",
@@ -76,14 +78,18 @@ const lang = {
       card3: "健康改善",
       card3Desc: "逐日记录身体的健康变化。",
       formTitle: "立即开始记录",
+      desc: "填写以下信息，追踪你的戒烟历程并查看进度",
       form1: "戒烟开始日期",
       form2: "戒烟前每日吸烟量",
-      form3: "每包香烟价格（元）",
+      form3: "每包香烟价格",
+      notes: "个人备注（可选）",
       formBtn: "计算我的进度",
       resultTitle: "你的戒烟进度",
       result1: "无烟天数：",
       result2: "节省金额：",
-      result3: "健康状态："
+      cigAvoided: "少抽香烟数量：",
+      result3: "健康状态：",
+      saveBtn: "保存我的进度"
     },
     tips: {
       title: "实用戒烟小贴士",
