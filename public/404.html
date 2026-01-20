@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#10B981',
+            dark: '#1F2937',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col justify-center items-center p-4">
+  <div class="text-center max-w-md">
+    <div class="text-primary text-8xl mb-6">
+      <i class="fa-solid fa-exclamation-triangle"></i>
+    </div>
+    <h1 class="text-4xl font-bold text-dark mb-4">404</h1>
+    <h2 class="text-xl font-semibold mb-4" id="errorTitle">Page Not Found</h2>
+    <p class="text-gray-600 mb-8" id="errorDesc">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    <div class="flex gap-4 justify-center mb-6">
+      <button id="langEn" class="px-4 py-2 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors">EN</button>
+      <button id="langZh" class="px-4 py-2 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors">中文</button>
+    </div>
+    <a href="/" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors">
+      <i class="fa-solid fa-home mr-2"></i> <span id="backHome">Back to Home</span>
+    </a>
+  </div>
+
+  <script>
+    // 404页面多语言配置
+    const lang = {
+      en: {
+        errorTitle: "Page Not Found",
+        errorDesc: "The page you're looking for doesn't exist or has been moved.",
+        backHome: "Back to Home"
+      },
+      zh: {
+        errorTitle: "页面未找到",
+        errorDesc: "你访问的页面不存在或已被移动。",
+        backHome: "返回首页"
+      }
+    };
+
+    let currentLang = 'en';
+    // 初始化语言
+    function initLang() {
+      document.getElementById('errorTitle').textContent = lang[currentLang].errorTitle;
+      document.getElementById('errorDesc').textContent = lang[currentLang].errorDesc;
+      document.getElementById('backHome').textContent = lang[currentLang].backHome;
+    }
+
+    // 绑定语言切换事件
+    document.getElementById('langEn').addEventListener('click', () => {
+      currentLang = 'en';
+      initLang();
+    });
+    document.getElementById('langZh').addEventListener('click', () => {
+      currentLang = 'zh';
+      initLang();
+    });
+
+    // 页面加载初始化
+    window.onload = initLang;
+  </script>
+</body>
+</html>
