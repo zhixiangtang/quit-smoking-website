@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quit Smoking - Better Life for Everyone</title>
+  <meta name="description" content="Global quit smoking platform - track your journey, get support, and live a healthier life.">
+  <!-- Tailwind CSS (CDN - 保证访问速度) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome (图标) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- 自定义样式 -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- 自定义Tailwind主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#10B981', // 健康绿（戒烟主题）
+            secondary: '#3B82F6', // 辅助蓝
+            accent: '#F59E0B', // 强调橙
+            dark: '#1F2937',
+            light: '#F9FAFB'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-light font-sans text-dark">
+  <!-- 导航栏 -->
+  <nav class="sticky top-0 bg-white shadow-md z-50 transition-all duration-300">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2">
+        <i class="fa-solid fa-lungs text-primary text-2xl"></i>
+        <span class="text-xl font-bold text-primary">QuitSmoke</span>
+      </a>
+      <div class="hidden md:flex gap-6">
+        <a href="#track" class="hover:text-primary transition-colors">Track Journey</a>
+        <a href="#tips" class="hover:text-primary transition-colors">Quit Tips</a>
+        <a href="#support" class="hover:text-primary transition-colors">Support</a>
+        <a href="#about" class="hover:text-primary transition-colors">About</a>
+      </div>
+      <button class="md:hidden text-dark text-xl">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </nav>
 
+  <!-- 英雄区 -->
+  <section class="bg-gradient-to-r from-primary/90 to-secondary/90 text-white py-16 md:py-24">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6">Quit Smoking, Live Better</h1>
+      <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+        Your journey to a smoke-free life starts here. Track your progress, get personalized tips, and join a global community of quitters.
+      </p>
+      <a href="#track" class="bg-white text-primary font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all">
+        Start Your Journey <i class="fa-solid fa-arrow-right ml-2"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- 核心功能区 - 记录追踪 -->
+  <section id="track" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">Track Your Quit Journey</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- 功能1：记录戒烟天数 -->
+        <div class="bg-light rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
+          <div class="text-primary text-3xl mb-4">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Days Smoke-Free</h3>
+          <p class="text-gray-600">Count every smoke-free day and celebrate your milestones.</p>
+        </div>
+        <!-- 功能2：节省金额计算 -->
+        <div class="bg-light rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
+          <div class="text-secondary text-3xl mb-4">
+            <i class="fa-solid fa-sack-dollar"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Money Saved</h3>
+          <p class="text-gray-600">Calculate how much you've saved by not buying cigarettes.</p>
+        </div>
+        <!-- 功能3：健康改善 -->
+        <div class="bg-light rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
+          <div class="text-accent text-3xl mb-4">
+            <i class="fa-solid fa-heart-pulse"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Health Progress</h3>
+          <p class="text-gray-600">Track your health improvements day by day.</p>
+        </div>
+      </div>
+
+      <!-- 记录表单 -->
+      <div class="mt-12 max-w-2xl mx-auto bg-light rounded-xl p-8 shadow-md">
+        <h3 class="text-2xl font-semibold mb-6 text-center">Start Tracking Now</h3>
+        <form id="trackForm" class="space-y-4">
+          <div>
+            <label class="block text-gray-700 mb-2" for="startDate">Quit Start Date</label>
+            <input type="date" id="startDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-2" for="cigPerDay">Cigarettes per Day (Before)</label>
+            <input type="number" id="cigPerDay" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-2" for="pricePerPack">Price per Pack ($)</label>
+            <input type="number" step="0.01" id="pricePerPack" min="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+          </div>
+          <button type="submit" class="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-primary/90 transition-colors">
+            Calculate My Progress
+          </button>
+        </form>
+
+        <!-- 结果展示区 -->
+        <div id="progressResult" class="mt-8 hidden">
+          <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+            <h4 class="font-semibold text-lg mb-2">Your Smoke-Free Progress</h4>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <p class="text-gray-600">Days Quit:</p>
+                <p id="daysQuit" class="text-xl font-bold text-primary">0</p>
+              </div>
+              <div>
+                <p class="text-gray-600">Money Saved:</p>
+                <p id="moneySaved" class="text-xl font-bold text-secondary">$0.00</p>
+              </div>
+              <div class="col-span-2 mt-2">
+                <p class="text-gray-600">Health Status:</p>
+                <p id="healthStatus" class="font-medium">Your body is already starting to recover!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 戒烟小贴士 -->
+  <section id="tips" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">Useful Quit Smoking Tips</h2>
+      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-droplet text-primary"></i> Stay Hydrated
+          </h3>
+          <p class="text-gray-600">Drink plenty of water to reduce cravings and flush toxins from your body.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-person-running text-primary"></i> Exercise Regularly
+          </h3>
+          <p class="text-gray-600">Physical activity helps reduce stress and distracts from nicotine cravings.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-users text-primary"></i> Get Support
+          </h3>
+          <p class="text-gray-600">Tell friends and family about your goal - their support makes a big difference.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md">
+          <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-brain text-primary"></i> Avoid Triggers
+          </h3>
+          <p class="text-gray-600">Identify and avoid situations that make you want to smoke (e.g., stress, alcohol).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 支持区 -->
+  <section id="support" class="py-16 bg-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-6">You're Not Alone</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto mb-8">Join our global community of people who are quitting smoking. Share your journey, get advice, and celebrate victories together.</p>
+      <a href="#" class="inline-flex items-center gap-2 bg-secondary text-white px-6 py-3 rounded-lg hover:bg-secondary/90 transition-colors">
+        <i class="fa-solid fa-comments"></i> Join the Community
+      </a>
+    </div>
+  </section>
+
+  <!-- 关于区 -->
+  <section id="about" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4 max-w-3xl">
+      <h2 class="text-3xl font-bold text-center mb-8">About QuitSmoke</h2>
+      <p class="text-gray-600 mb-4">QuitSmoke is a global platform dedicated to helping people quit smoking and live healthier lives. Our mission is to provide free, accessible tools and support to anyone who wants to quit smoking.</p>
+      <p class="text-gray-600">We track anonymous usage data to improve our service, but we never collect personal information without your consent. Your journey to a smoke-free life is private and secure.</p>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <div class="flex items-center gap-2 justify-center md:justify-start">
+            <i class="fa-solid fa-lungs text-primary text-xl"></i>
+            <span class="text-lg font-bold">QuitSmoke</span>
+          </div>
+          <p class="text-gray-400 text-sm mt-2 text-center md:text-left">Global Quit Smoking Platform</p>
+        </div>
+        <div class="flex gap-6">
+          <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+        © 2026 QuitSmoke. All rights reserved. | Designed for a smoke-free world.
+      </div>
+    </div>
+  </footer>
+
+  <!-- 前端交互脚本 -->
+  <script src="js/script.js"></script>
+</body>
+</html>
