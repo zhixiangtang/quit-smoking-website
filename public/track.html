@@ -1,1 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Your Quit Journey | QuitSmoke</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- 自定义样式 -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- 多语言配置 -->
+  <script src="/js/lang.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#10B981',
+            secondary: '#3B82F6',
+            accent: '#F59E0B',
+            dark: '#1F2937',
+            light: '#F9FAFB'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-light font-sans text-dark min-h-screen">
+  <!-- 导航栏 -->
+  <nav class="sticky top-0 bg-white shadow-md z-50 transition-all duration-300">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <!-- 修复logo跳转：指向主页 -->
+      <a href="/" class="flex items-center gap-2">
+        <i class="fa-solid fa-lungs text-primary text-2xl"></i>
+        <span class="text-xl font-bold text-primary">QuitSmoke</span>
+      </a>
+      <!-- 语言切换按钮 -->
+      <div class="flex gap-2">
+        <button id="langEn" class="px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors">EN</button>
+        <button id="langZh" class="px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors">中文</button>
+      </div>
+    </div>
+  </nav>
 
+  <!-- 戒烟记录主区域 -->
+  <section class="py-12 md:py-16 container mx-auto px-4 max-w-3xl">
+    <div class="text-center mb-10">
+      <h1 data-lang="track.formTitle" class="text-3xl md:text-4xl font-bold mb-4">Start Tracking Now</h1>
+      <p data-lang="track.desc" class="text-gray-600">
+        Fill in the information below to track your smoke-free journey and see your progress
+      </p>
+    </div>
+
+    <!-- 戒烟记录表单 -->
+    <div class="bg-white rounded-xl p-6 md:p-8 shadow-md">
+      <form id="trackForm" class="space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="col-span-2">
+            <label class="block text-gray-700 mb-2" for="startDate" data-lang="track.form1">Quit Start Date</label>
+            <input type="date" id="startDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-2" for="cigPerDay" data-lang="track.form2">Cigarettes per Day (Before)</label>
+            <input type="number" id="cigPerDay" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required placeholder="10">
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-2" for="pricePerPack" data-lang="track.form3">Price per Pack</label>
+            <input type="number" step="0.01" id="pricePerPack" min="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required placeholder="10.00">
+          </div>
+          <div class="col-span-2">
+            <label class="block text-gray-700 mb-2" for="notes" data-lang="track.notes">Personal Notes (Optional)</label>
+            <textarea id="notes" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="My quit goals: ..."></textarea>
+          </div>
+          <div class="col-span-2">
+            <button type="submit" data-lang="track.formBtn" class="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-primary/90 transition-colors">
+              Calculate My Progress
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- 结果展示区 -->
+      <div id="progressResult" class="mt-8 hidden">
+        <div class="p-6 bg-green-50 rounded-lg border border-green-200">
+          <h3 data-lang="track.resultTitle" class="font-semibold text-xl mb-4">Your Smoke-Free Progress</h3>
+          <div class="grid md:grid-cols-3 gap-6 mb-4">
+            <div class="text-center">
+              <p data-lang="track.result1" class="text-gray-600 mb-1">Days Quit:</p>
+              <p id="daysQuit" class="text-3xl font-bold text-primary">0</p>
+            </div>
+            <div class="text-center">
+              <p data-lang="track.result2" class="text-gray-600 mb-1">Money Saved:</p>
+              <p id="moneySaved" class="text-3xl font-bold text-secondary">$0.00</p>
+            </div>
+            <div class="text-center">
+              <p data-lang="track.cigAvoided" class="text-gray-600 mb-1">Cigarettes Avoided:</p>
+              <p id="cigAvoided" class="text-3xl font-bold text-accent">0</p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <p data-lang="track.result3" class="text-gray-600 mb-2">Health Status:</p>
+            <p id="healthStatus" class="font-medium text-lg">Your body is already starting to recover!</p>
+          </div>
+          <div class="mt-6 flex justify-center">
+            <button id="saveProgress" data-lang="track.saveBtn" class="bg-secondary text-white px-6 py-2 rounded-lg hover:bg-secondary/90 transition-colors">
+              Save My Progress
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-6 mt-auto">
+    <div class="container mx-auto px-4 text-center text-sm text-gray-400">
+      © 2026 QuitSmoke. All rights reserved. | <a href="/" class="text-primary hover:underline">Back to Home</a>
+    </div>
+  </footer>
+
+  <!-- 交互脚本 -->
+  <script src="/js/track-script.js"></script>
+</body>
+</html>
