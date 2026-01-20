@@ -1,1 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>戒烟助手 - 告别吸烟，拥抱健康生活</title>
+  <meta name="description" content="戒烟助手 - 提供专业的戒烟指导、危害警示和进度记录，帮助你轻松戒烟">
+  <!-- Tailwind CSS CDN（保证加载速度） -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome 图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- 自定义样式 -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- 自定义Tailwind主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#10B981', // 健康绿
+            danger: '#EF4444',   // 危险红（危害警示）
+            secondary: '#3B82F6',// 辅助蓝
+            dark: '#1F2937',
+            light: '#F9FAFB'
+          },
+          fontFamily: {
+            sans: ['PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-light font-sans text-dark">
+  <!-- 导航栏 -->
+  <nav class="sticky top-0 bg-white shadow-md z-50">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <!-- Logo - 跳转主页 -->
+      <a href="./index.html" class="flex items-center gap-2">
+        <i class="fa-solid fa-lungs text-primary text-2xl"></i>
+        <span class="text-xl font-bold text-primary">戒烟助手</span>
+      </a>
+      <!-- 桌面端导航 -->
+      <div class="hidden md:flex gap-6">
+        <a href="#harm" class="hover:text-primary transition-colors">吸烟危害</a>
+        <a href="#tips" class="hover:text-primary transition-colors">戒烟贴士</a>
+        <a href="#benefit" class="hover:text-primary transition-colors">戒烟益处</a>
+        <a href="./track.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">开启旅程</a>
+      </div>
+      <!-- 移动端菜单按钮 -->
+      <button id="mobileMenuBtn" class="md:hidden text-dark text-xl">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+    <!-- 移动端菜单 -->
+    <div id="mobileMenu" class="mobile-menu hidden px-4 py-2 bg-white shadow-lg">
+      <a href="#harm" class="block py-2">吸烟危害</a>
+      <a href="#tips" class="block py-2">戒烟贴士</a>
+      <a href="#benefit" class="block py-2">戒烟益处</a>
+      <a href="./track.html" class="block py-2 text-primary font-medium">开启旅程</a>
+    </div>
+  </nav>
 
+  <!-- 英雄区 - 核心宣传 -->
+  <section class="bg-gradient-to-r from-primary/90 to-secondary/90 text-white py-16 md:py-24">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6">告别吸烟，拥抱健康生活</h1>
+      <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+        每一次戒烟的尝试，都是对自己和家人的负责。我们陪你走过戒烟的每一步，记录你的每一次进步。
+      </p>
+      <!-- 开启旅程按钮 - 跳转记录页 -->
+      <a href="./track.html" class="bg-white text-primary font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all">
+        开启我的戒烟之旅 <i class="fa-solid fa-arrow-right ml-2"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- 吸烟危害板块 -->
+  <section id="harm" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">吸烟的致命危害</h2>
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <!-- 肺部疾病 -->
+        <div class="bg-light rounded-xl p-6 shadow-md hover:shadow-lg transition-all border-l-4 border-danger">
+          <div class="text-danger text-3xl mb-4">
+            <i class="fa-solid fa-lungs-virus"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">肺部疾病</h3>
+          <p class="text-gray-600">吸烟是导致肺癌、慢性支气管炎、肺气肿的主要原因，每支烟都在损伤你的呼吸功能。</p>
+        </div>
+        <!-- 心血管疾病 -->
+        <div class="bg-light rounded-xl p-6 shadow-md hover:shadow-lg transition-all border-l-4 border-danger">
+          <div class="text-danger text-3xl mb-4">
+            <i class="fa-solid fa-heart-circle-xmark"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">心血管疾病</h3>
+          <p class="text-gray-600">尼古丁会使血管收缩，增加高血压、冠心病、心肌梗死和中风的风险。</p>
+        </div>
+        <!-- 家人健康 -->
+        <div class="bg-light rounded-xl p-6 shadow-md hover:shadow-lg transition-all border-l-4 border-danger">
+          <div class="text-danger text-3xl mb-4">
+            <i class="fa-solid fa-child-reaching"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">危害家人健康</h3>
+          <p class="text-gray-600">二手烟、三手烟会导致家人尤其是儿童患上哮喘、肺炎、中耳炎等疾病。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 戒烟贴士板块 -->
+  <section id="tips" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">实用戒烟小贴士</h2>
+      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all">
+          <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-droplet text-primary"></i> 多喝水
+          </h3>
+          <p class="text-gray-600">充足饮水可缓解烟瘾，帮助身体排出尼古丁等有害物质，每天至少喝8杯水。</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all">
+          <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-person-running text-primary"></i> 规律运动
+          </h3>
+          <p class="text-gray-600">运动能减轻压力，转移对尼古丁的渴望，建议每天30分钟快走、慢跑或瑜伽。</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all">
+          <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-users text-primary"></i> 寻求支持
+          </h3>
+          <p class="text-gray-600">告诉亲友你的戒烟目标，他们的鼓励和监督能大幅提高戒烟成功率。</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all">
+          <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-brain text-primary"></i> 避开诱因
+          </h3>
+          <p class="text-gray-600">远离酒局、熬夜等易引发烟瘾的场景，用嚼口香糖、嗑瓜子替代吸烟动作。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 戒烟益处板块 -->
+  <section id="benefit" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">戒烟后的身体变化</h2>
+      <div class="max-w-4xl mx-auto">
+        <div class="space-y-6">
+          <!-- 20分钟后 -->
+          <div class="bg-light rounded-xl p-6 shadow-md">
+            <h3 class="text-lg font-semibold mb-2 text-primary">戒烟20分钟后</h3>
+            <p class="text-gray-600">心率和血压恢复正常，手脚血液循环改善，身体开始摆脱尼古丁的控制。</p>
+          </div>
+          <!-- 12小时后 -->
+          <div class="bg-light rounded-xl p-6 shadow-md">
+            <h3 class="text-lg font-semibold mb-2 text-primary">戒烟12小时后</h3>
+            <p class="text-gray-600">血液中的一氧化碳浓度降至正常，大脑供氧充足，头晕、乏力感减轻。</p>
+          </div>
+          <!-- 1周后 -->
+          <div class="bg-light rounded-xl p-6 shadow-md">
+            <h3 class="text-lg font-semibold mb-2 text-primary">戒烟1周后</h3>
+            <p class="text-gray-600">味觉和嗅觉明显改善，能品尝到食物的原味，呼吸也变得更加顺畅。</p>
+          </div>
+          <!-- 1个月后 -->
+          <div class="bg-light rounded-xl p-6 shadow-md">
+            <h3 class="text-lg font-semibold mb-2 text-primary">戒烟1个月后</h3>
+            <p class="text-gray-600">肺功能提升10%，咳嗽、咳痰等症状减少，运动耐力显著提高。</p>
+          </div>
+          <!-- 1年后 -->
+          <div class="bg-light rounded-xl p-6 shadow-md">
+            <h3 class="text-lg font-semibold mb-2 text-primary">戒烟1年后</h3>
+            <p class="text-gray-600">患冠心病的风险降至吸烟者的一半，身体各项机能基本恢复正常。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <div class="flex items-center gap-2 justify-center md:justify-start">
+            <i class="fa-solid fa-lungs text-primary text-xl"></i>
+            <span class="text-lg font-bold">戒烟助手</span>
+          </div>
+          <p class="text-gray-400 text-sm mt-2 text-center md:text-left">专注帮助每一位吸烟者摆脱烟瘾</p>
+        </div>
+        <div class="text-gray-400 text-sm text-center md:text-right">
+          © 2026 戒烟助手 版权所有 | 健康生活，从戒烟开始
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 主页交互脚本 -->
+  <script src="js/index-script.js"></script>
+</body>
+</html>
