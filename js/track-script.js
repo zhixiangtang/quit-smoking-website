@@ -45,13 +45,13 @@ function forceLoadUserData() {
       const userData = JSON.parse(rawData);
       // 强制同步锁定状态到全局变量
       GLOBAL_IS_LOCKED = userData.isLocked || false;
-      console.log('强制加载数据成功：', userData);
+      console.log('【戒烟助手】强制加载数据成功：', userData);
     } else {
       GLOBAL_IS_LOCKED = false;
-      console.log('无本地数据，初始化锁定状态为false');
+      console.log('【戒烟助手】无本地数据，初始化锁定状态为false');
     }
   } catch (error) {
-    console.error('强制加载数据失败：', error);
+    console.error('【戒烟助手】强制加载数据失败：', error);
     GLOBAL_IS_LOCKED = false;
   }
 }
@@ -74,7 +74,7 @@ function loadUserData() {
     };
     return rawData ? JSON.parse(rawData) : defaultData;
   } catch (error) {
-    console.error('加载数据失败：', error);
+    console.error('【戒烟助手】加载数据失败：', error);
     return { form: {}, isLocked: false };
   }
 }
@@ -90,10 +90,10 @@ function saveUserData(newData) {
     // 强制同步全局锁定状态到保存数据
     finalData.isLocked = GLOBAL_IS_LOCKED;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(finalData));
-    console.log('强制保存数据成功：', finalData);
+    console.log('【戒烟助手】强制保存数据成功：', finalData);
     return true;
   } catch (error) {
-    console.error('保存数据失败：', error);
+    console.error('【戒烟助手】保存数据失败：', error);
     alert('数据保存失败，请检查浏览器存储权限！');
     return false;
   }
@@ -159,6 +159,13 @@ function updateFormLockState(isLocked) {
       }
     }
   });
+
+  // 更新调试状态显示
+  const debugEl = document.getElementById('debugLockState');
+  if (debugEl) {
+    debugEl.textContent = isLocked ? '已锁定' : '未锁定';
+    debugEl.style.color = isLocked ? '#EF4444' : '#10B981';
+  }
 }
 
 /**
