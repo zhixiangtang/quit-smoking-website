@@ -23,6 +23,16 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: 365, name: "戒烟大师", color: "primary", target: 365 }
   ];
 
+  // 全局状态
+  let currentDate = new Date();
+  let checkInData = {
+    records: {}, // 打卡记录：{ "2026-01-01": "checkIn", "2026-01-02": "miss", "2026-01-03": "makeUp" }
+    continuousDays: 0,
+    totalCheckInDays: 0,
+    makeUpCount: 0, // 当月补卡次数
+    maxMakeUpCount: 3 // 每月最大补卡次数
+  };
+
   // 加载本地存储数据
   const loadSavedData = () => {
     try {
@@ -36,38 +46,43 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         history: [],
         checkIn: {
-          lastCheckInDate: '',
+          records: {},
           continuousDays: 0,
-          totalCheckInDays: 0
+          totalCheckInDays: 0,
+          makeUpCount: 0,
+          maxMakeUpCount: 3
         }
       };
-      return savedData ? JSON.parse(savedData) : defaultData;
+      const data = savedData ? JSON.parse(savedData) : defaultData;
+      // 初始化打卡数据
+      checkInData = data.checkIn;
+      return data;
     } catch (e) {
       console.error('加载数据失败:', e);
       return {
         form: {},
         history: [],
-        checkIn: {
-          lastCheckInDate: '',
-          continuousDays: 0,
-          totalCheckInDays: 0
-        }
+        checkIn: checkInData
       };
     }
   };
 
   // 保存数据到本地存储
-  const saveData = (data) => {
+  const saveData = (data = {}) => {
     try {
-      localStorage.setItem('quitSmokeData', JSON.stringify(data));
+      const savedData = loadSavedData();
+      const newData = { ...savedData, ...data, checkIn: checkInData };
+      localStorage.setItem('quitSmokeData', JSON.stringify(newData));
       updateCheckInUI();
+      renderCalendar();
       updateAchievementUI();
       updateEncourageText();
       loadHistory();
-      alert('进度保存成功！数据已存储在本地，不会丢失');
+      return true;
     } catch (e) {
       console.error('保存数据失败:', e);
       alert('保存失败，请检查浏览器存储权限！');
+      return false;
     }
   };
 
@@ -79,19 +94,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!historyList || !historySection) return;
 
-    if (savedData && savedData.history && savedData.history.length > 0) {
+    // 提取打卡记录并排序
+    const checkInHistory = Object.entries(checkInData.records)
+      .map(([date, type]) => ({
+        date,
+        type,
+        typeText: type === 'checkIn' ? '正常打卡' : type === 'makeUp' ? '补卡' : '未打卡'
+      }))
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (checkInHistory.length > 0) {
       historySection.classList.remove('hidden');
       historyList.innerHTML = '';
       
-      savedData.history.forEach((item) => {
-        const date = new Date(item.date);
-        const formattedDate = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-        
+      checkInHistory.forEach(item => {
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
         historyItem.innerHTML = `
-          <p class="font-medium">${formattedDate}</p>
-          <p class="text-sm text-gray-600">无烟天数：${item.daysQuit}天 | 节省金额：¥${item.moneySaved} | 少抽香烟：${item.cigAvoided}支</p>
+          <p class="font-medium">${item.date}</p>
+          <p class="text-sm text-gray-600">打卡状态：<span class="${item.type === 'checkIn' ? 'text-checkIn' : item.type === 'makeUp' ? 'text-checkInMakeUp' : 'text-checkInMiss'}">${item.typeText}</span></p>
         `;
         historyList.appendChild(historyItem);
       });
@@ -114,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
       if (pricePerPackEl) pricePerPackEl.value = savedData.form.pricePerPack || '';
       if (notesEl) notesEl.value = savedData.form.notes || '';
       
-      // 如果有保存的表单数据，自动计算进度
       if (savedData.form.startDate && savedData.form.cigPerDay && savedData.form.pricePerPack) {
         calculateProgress(
           savedData.form.startDate, 
@@ -123,18 +143,16 @@ document.addEventListener('DOMContentLoaded', function() {
         );
       }
     }
-    // 初始化UI
+
+    // 初始化打卡相关
     updateCheckInUI();
+    renderCalendar();
     updateAchievementUI();
     updateEncourageText();
     loadHistory();
     
-    // 绑定表单提交事件
-    bindFormSubmit();
-    // 绑定打卡按钮事件
-    bindCheckInBtn();
-    // 绑定保存/重置按钮事件
-    bindSaveResetBtn();
+    // 绑定事件
+    bindEvents();
   };
 
   // 计算戒烟进度
@@ -157,11 +175,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const timeDiff = today - startDate;
     const daysQuit = Math.max(0, Math.floor(timeDiff / (1000 * 60 * 60 * 24)));
     
-    const packsPerDay = cigPerDay / 20; // 每包20支
+    const packsPerDay = cigPerDay / 20;
     const moneySaved = (packsPerDay * pricePerPack * daysQuit).toFixed(2);
     const cigAvoided = cigPerDay * daysQuit;
     
-    // 更新UI显示
+    // 更新UI
     const daysQuitEl = document.getElementById('daysQuit');
     const moneySavedEl = document.getElementById('moneySaved');
     const cigAvoidedEl = document.getElementById('cigAvoided');
@@ -175,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (totalDaysQuitEl) totalDaysQuitEl.textContent = daysQuit;
     if (totalMoneySavedEl) totalMoneySavedEl.textContent = `¥${moneySaved}`;
 
-    // 更新健康状态
+    // 健康状态
     let healthStatus = '';
     if (daysQuit < 1) healthStatus = '今天就开启你的戒烟之旅吧！';
     else if (daysQuit < 7) healthStatus = '尼古丁正在离开你的身体 - 做得很棒！';
@@ -186,15 +204,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (healthStatusEl) healthStatusEl.textContent = healthStatus;
 
-    // 更新成就进度和鼓励语
     updateAchievementProgress(daysQuit);
     updateEncourageText(daysQuit);
     
-    // 显示计算结果区域
     const progressResultEl = document.getElementById('progressResult');
     if (progressResultEl) progressResultEl.classList.remove('hidden');
     
-    // 保存计算结果到历史记录
+    // 保存数据
     const savedData = loadSavedData();
     savedData.history.push({
       date: new Date().toISOString().split('T')[0],
@@ -202,22 +218,262 @@ document.addEventListener('DOMContentLoaded', function() {
       moneySaved: moneySaved,
       cigAvoided: cigAvoided
     });
-    // 只保留最近10条记录
-    if (savedData.history.length > 10) {
-      savedData.history = savedData.history.slice(-10);
-    }
-    // 保存表单数据
+    if (savedData.history.length > 10) savedData.history = savedData.history.slice(-10);
     savedData.form = {
       startDate: startDateVal,
       cigPerDay: cigPerDayVal,
       pricePerPack: pricePerPackVal,
       notes: document.getElementById('notes').value || ''
     };
-    localStorage.setItem('quitSmokeData', JSON.stringify(savedData));
+    saveData(savedData);
+  };
+
+  // 渲染日历
+  const renderCalendar = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const calendarGrid = document.getElementById('calendarGrid');
+    const currentMonthTitle = document.getElementById('currentMonthTitle');
+    
+    if (!calendarGrid || !currentMonthTitle) return;
+
+    // 更新月份标题
+    currentMonthTitle.textContent = `${year}年${month + 1}月`;
+
+    // 获取当月第一天和最后一天
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const firstDayOfWeek = firstDay.getDay(); // 0-6（日-六）
+    const totalDays = lastDay.getDate();
+
+    // 清空日历
+    calendarGrid.innerHTML = '';
+
+    // 填充上月剩余天数（灰色显示）
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      const prevMonthDay = new Date(year, month, -firstDayOfWeek + i + 1);
+      const dayEl = document.createElement('div');
+      dayEl.className = 'h-12 flex items-center justify-center text-gray-400 text-sm bg-gray-50 rounded';
+      dayEl.textContent = prevMonthDay.getDate();
+      calendarGrid.appendChild(dayEl);
+    }
+
+    // 填充当月天数
+    const today = new Date().toISOString().split('T')[0];
+    const startDate = loadSavedData().form.startDate || '';
+    const startDateObj = startDate ? new Date(startDate) : null;
+
+    for (let day = 1; day <= totalDays; day++) {
+      const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const dateObj = new Date(year, month, day);
+      const isToday = dateStr === today;
+      const isBeforeStart = startDateObj && dateObj < startDateObj; // 戒烟开始前的日期不可打卡
+      const checkInType = checkInData.records[dateStr] || 'none';
+
+      const dayEl = document.createElement('div');
+      dayEl.className = 'h-12 flex items-center justify-center rounded cursor-pointer transition-colors';
+      
+      // 基础样式
+      if (isToday) dayEl.classList.add('border-2', 'border-primary/50');
+      if (isBeforeStart) dayEl.classList.add('text-gray-300', 'bg-gray-50', 'cursor-not-allowed');
+      
+      // 打卡状态样式
+      if (checkInType === 'checkIn') {
+        dayEl.classList.add('bg-checkIn/20', 'text-checkIn', 'font-medium');
+        dayEl.innerHTML = `<<i class="fa-solid fa-check"></</i>`;
+      } else if (checkInType === 'makeUp') {
+        dayEl.classList.add('bg-checkInMakeUp/20', 'text-checkInMakeUp', 'font-medium');
+        dayEl.innerHTML = `<<i class="fa-solid fa-clock-rotate-left"></</i>`;
+      } else if (checkInType === 'miss') {
+        dayEl.classList.add('bg-checkInMiss/10', 'text-checkInMiss');
+        dayEl.textContent = day;
+      } else {
+        dayEl.classList.add('hover:bg-gray-100');
+        dayEl.textContent = day;
+      }
+
+      // 点击事件（仅当月、戒烟开始后、非今日未打卡可点击）
+      if (!isBeforeStart && dateStr !== today && checkInType === 'none') {
+        dayEl.addEventListener('click', () => handleDateClick(dateStr));
+      }
+
+      calendarGrid.appendChild(dayEl);
+    }
+
+    // 填充下月剩余天数（灰色显示）
+    const totalCells = 42; // 6行×7列
+    const filledCells = firstDayOfWeek + totalDays;
+    for (let i = 0; i < totalCells - filledCells; i++) {
+      const nextMonthDay = new Date(year, month + 1, i + 1);
+      const dayEl = document.createElement('div');
+      dayEl.className = 'h-12 flex items-center justify-center text-gray-400 text-sm bg-gray-50 rounded';
+      dayEl.textContent = nextMonthDay.getDate();
+      calendarGrid.appendChild(dayEl);
+    }
+  };
+
+  // 处理日历日期点击
+  const handleDateClick = (dateStr) => {
+    const today = new Date().toISOString().split('T')[0];
+    const dateObj = new Date(dateStr);
+    const todayObj = new Date(today);
+    const diffDays = Math.floor((todayObj - dateObj) / (1000 * 60 * 60 * 24));
+
+    // 只能补7天内的日期
+    if (diffDays > 7) {
+      alert('只能补7天内未打卡的日期！');
+      return;
+    }
+
+    // 检查补卡次数
+    if (checkInData.makeUpCount >= checkInData.maxMakeUpCount) {
+      alert(`本月补卡次数已用完（每月限${checkInData.maxMakeUpCount}次）！`);
+      return;
+    }
+
+    // 确认补卡
+    if (confirm(`确定要补${dateStr}的打卡吗？`)) {
+      checkInData.records[dateStr] = 'makeUp';
+      checkInData.makeUpCount += 1;
+      checkInData.totalCheckInDays += 1;
+      calculateContinuousDays();
+      saveData();
+      alert('补卡成功！');
+    }
+  };
+
+  // 今日打卡
+  const handleTodayCheckIn = () => {
+    const today = new Date().toISOString().split('T')[0];
+    if (checkInData.records[today]) {
+      alert('今日已打卡，无需重复打卡！');
+      return;
+    }
+
+    checkInData.records[today] = 'checkIn';
+    checkInData.totalCheckInDays += 1;
+    calculateContinuousDays();
+    saveData();
+    alert('今日打卡成功！坚持就是胜利！');
+  };
+
+  // 计算连续打卡天数
+  const calculateContinuousDays = () => {
+    const today = new Date().toISOString().split('T')[0];
+    let continuous = 0;
+    let currentCheckDate = new Date(today);
+
+    while (true) {
+      const dateStr = currentCheckDate.toISOString().split('T')[0];
+      const checkInType = checkInData.records[dateStr];
+      
+      if (checkInType === 'checkIn' || checkInType === 'makeUp') {
+        continuous += 1;
+        currentCheckDate.setDate(currentCheckDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+
+    checkInData.continuousDays = continuous;
+  };
+
+  // 补卡功能（弹窗选择日期）
+  const handleMakeUpCheckIn = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+    const startDate = loadSavedData().form.startDate || '';
+
+    if (!startDate) {
+      alert('请先填写戒烟开始日期！');
+      return;
+    }
+
+    if (checkInData.makeUpCount >= checkInData.maxMakeUpCount) {
+      alert(`本月补卡次数已用完（每月限${checkInData.maxMakeUpCount}次）！`);
+      return;
+    }
+
+    // 生成7天内未打卡的日期列表
+    const makeUpDates = [];
+    let currentDate = new Date(sevenDaysAgo);
+    const endDate = new Date(today);
+
+    while (currentDate <= endDate) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      const dateObj = new Date(dateStr);
+      const startDateObj = new Date(startDate);
+      
+      // 戒烟开始后、未打卡、非今日
+      if (dateObj >= startDateObj && !checkInData.records[dateStr] && dateStr !== today) {
+        makeUpDates.push(dateStr);
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    if (makeUpDates.length === 0) {
+      alert('暂无可补卡的日期！');
+      return;
+    }
+
+    // 弹窗选择补卡日期
+    const selectedDate = prompt(
+      `请选择补卡日期（7天内，已用补卡次数：${checkInData.makeUpCount}/${checkInData.maxMakeUpCount}）：\n` +
+      makeUpDates.join('\n'),
+      makeUpDates[0]
+    );
+
+    if (!selectedDate || !makeUpDates.includes(selectedDate)) {
+      alert('请选择有效的补卡日期！');
+      return;
+    }
+
+    checkInData.records[selectedDate] = 'makeUp';
+    checkInData.makeUpCount += 1;
+    checkInData.totalCheckInDays += 1;
+    calculateContinuousDays();
+    saveData();
+    alert(`补卡${selectedDate}成功！`);
+  };
+
+  // 更新打卡UI
+  const updateCheckInUI = () => {
+    const today = new Date().toISOString().split('T')[0];
+    const checkInStatus = document.getElementById('checkInStatus');
+    const continuousDaysEl = document.getElementById('continuousDays');
+    const todayCheckInBtn = document.getElementById('todayCheckInBtn');
+    const makeUpCheckInBtn = document.getElementById('makeUpCheckInBtn');
+
+    if (checkInStatus) {
+      checkInStatus.textContent = checkInData.records[today] ? '已打卡 ✅' : '未打卡';
+    }
+
+    if (continuousDaysEl) {
+      continuousDaysEl.textContent = `${checkInData.continuousDays} 天`;
+    }
+
+    if (todayCheckInBtn) {
+      if (checkInData.records[today]) {
+        todayCheckInBtn.disabled = true;
+        todayCheckInBtn.classList.add('bg-gray-400');
+        todayCheckInBtn.classList.remove('bg-primary');
+      } else {
+        todayCheckInBtn.disabled = false;
+        todayCheckInBtn.classList.remove('bg-gray-400');
+        todayCheckInBtn.classList.add('bg-primary');
+      }
+    }
+
+    if (makeUpCheckInBtn) {
+      makeUpCheckInBtn.textContent = `补卡（7天内）- 剩余${checkInData.maxMakeUpCount - checkInData.makeUpCount}次`;
+    }
   };
 
   // 更新成就进度
-  const updateAchievementProgress = (daysQuit) => {
+  const updateAchievementProgress = (daysQuit = 0) => {
     achievementConfig.forEach(achievement => {
       const progress = Math.min(100, (daysQuit / achievement.target) * 100);
       const progressBar = document.getElementById(`progress${achievement.id}`);
@@ -227,12 +483,22 @@ document.addEventListener('DOMContentLoaded', function() {
       if (progressBar) progressBar.style.width = `${progress}%`;
       if (progressText) progressText.textContent = `${daysQuit}/${achievement.target} 天`;
       
-      // 成就达成样式
       if (daysQuit >= achievement.target && achievementCard) {
         achievementCard.classList.add(`border-${achievement.color}`, `bg-${achievement.color}/5`);
         achievementCard.classList.remove(`border-${achievement.color}/30`);
       }
     });
+  };
+
+  // 更新成就UI
+  const updateAchievementUI = () => {
+    const savedData = loadSavedData();
+    if (savedData.form.startDate && savedData.form.cigPerDay && savedData.form.pricePerPack) {
+      const startDate = new Date(savedData.form.startDate);
+      const today = new Date();
+      const daysQuit = Math.max(0, Math.floor((today - startDate) / (1000 * 60 * 60 * 24)));
+      updateAchievementProgress(daysQuit);
+    }
   };
 
   // 更新鼓励语
@@ -250,115 +516,53 @@ document.addEventListener('DOMContentLoaded', function() {
     encourageTextEl.textContent = matchedText;
   };
 
-  // 处理打卡逻辑
-  const handleCheckIn = () => {
-    const savedData = loadSavedData();
-    const today = new Date().toISOString().split('T')[0];
-    
-    // 检查是否已打卡
-    if (savedData.checkIn.lastCheckInDate === today) {
-      alert('今日已打卡！你超棒的，继续保持！');
-      return;
+  // 绑定所有事件
+  const bindEvents = () => {
+    // 今日打卡按钮
+    const todayCheckInBtn = document.getElementById('todayCheckInBtn');
+    if (todayCheckInBtn) {
+      todayCheckInBtn.addEventListener('click', handleTodayCheckIn);
     }
-    
-    // 计算连续打卡天数
-    const lastDate = savedData.checkIn.lastCheckInDate;
-    if (lastDate) {
-      const lastCheckIn = new Date(lastDate);
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
-      
-      if (lastDate === yesterdayStr) {
-        savedData.checkIn.continuousDays += 1;
-      } else {
-        savedData.checkIn.continuousDays = 1;
-      }
-    } else {
-      savedData.checkIn.continuousDays = 1;
-    }
-    
-    // 更新打卡信息
-    savedData.checkIn.lastCheckInDate = today;
-    savedData.checkIn.totalCheckInDays += 1;
-    
-    // 保存数据并更新UI
-    saveData(savedData);
-    alert('打卡成功！今天也是战胜烟瘾的一天，牛逼！');
-  };
 
-  // 更新打卡UI
-  const updateCheckInUI = () => {
-    const savedData = loadSavedData();
-    const today = new Date().toISOString().split('T')[0];
-    const checkInStatusEl = document.getElementById('checkInStatus');
-    const continuousDaysEl = document.getElementById('continuousDays');
-    const checkInBtnEl = document.getElementById('checkInBtn');
-    
-    // 更新打卡状态
-    if (checkInStatusEl) {
-      checkInStatusEl.textContent = savedData.checkIn.lastCheckInDate === today ? '已打卡 ✅' : '未打卡';
+    // 补卡按钮
+    const makeUpCheckInBtn = document.getElementById('makeUpCheckInBtn');
+    if (makeUpCheckInBtn) {
+      makeUpCheckInBtn.addEventListener('click', handleMakeUpCheckIn);
     }
-    
-    // 更新连续打卡天数
-    if (continuousDaysEl) {
-      continuousDaysEl.textContent = `${savedData.checkIn.continuousDays} 天`;
-    }
-    
-    // 禁用已打卡的按钮
-    if (checkInBtnEl) {
-      if (savedData.checkIn.lastCheckInDate === today) {
-        checkInBtnEl.disabled = true;
-        checkInBtnEl.classList.add('bg-gray-400');
-        checkInBtnEl.classList.remove('bg-primary');
-      } else {
-        checkInBtnEl.disabled = false;
-        checkInBtnEl.classList.remove('bg-gray-400');
-        checkInBtnEl.classList.add('bg-primary');
-      }
-    }
-  };
 
-  // 更新成就UI
-  const updateAchievementUI = () => {
-    const savedData = loadSavedData();
-    if (savedData.form.startDate && savedData.form.cigPerDay && savedData.form.pricePerPack) {
-      const startDate = new Date(savedData.form.startDate);
-      const today = new Date();
-      const daysQuit = Math.max(0, Math.floor((today - startDate) / (1000 * 60 * 60 * 24)));
-      updateAchievementProgress(daysQuit);
+    // 上月/下月按钮
+    const prevMonthBtn = document.getElementById('prevMonthBtn');
+    const nextMonthBtn = document.getElementById('nextMonthBtn');
+    if (prevMonthBtn) {
+      prevMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+      });
     }
-  };
+    if (nextMonthBtn) {
+      nextMonthBtn.addEventListener('click', () => {
+        const today = new Date();
+        const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+        // 不能超过当前月
+        if (nextMonth <= today) {
+          currentDate.setMonth(currentDate.getMonth() + 1);
+          renderCalendar();
+        }
+      });
+    }
 
-  // 绑定表单提交事件
-  const bindFormSubmit = () => {
+    // 表单提交
     const trackForm = document.getElementById('trackForm');
     if (trackForm) {
       trackForm.addEventListener('submit', function(e) {
-        // 阻止表单默认提交（关键修复：防止页面刷新/清空）
         e.preventDefault();
-        
-        // 获取表单数据
         const startDate = document.getElementById('startDate').value;
         const cigPerDay = document.getElementById('cigPerDay').value;
         const pricePerPack = document.getElementById('pricePerPack').value;
-        
-        // 计算进度
         calculateProgress(startDate, cigPerDay, pricePerPack);
       });
     }
-  };
 
-  // 绑定打卡按钮事件
-  const bindCheckInBtn = () => {
-    const checkInBtn = document.getElementById('checkInBtn');
-    if (checkInBtn) {
-      checkInBtn.addEventListener('click', handleCheckIn);
-    }
-  };
-
-  // 绑定保存/重置按钮事件
-  const bindSaveResetBtn = () => {
     // 保存进度按钮
     const saveProgressBtn = document.getElementById('saveProgress');
     if (saveProgressBtn) {
@@ -369,7 +573,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const pricePerPack = document.getElementById('pricePerPack').value;
         const notes = document.getElementById('notes').value;
         
-        // 更新表单数据
         savedData.form = {
           startDate: startDate,
           cigPerDay: cigPerDay,
@@ -378,18 +581,25 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         saveData(savedData);
+        alert('进度保存成功！');
       });
     }
-    
-    // 重置记录按钮
+
+    // 重置按钮
     const resetProgressBtn = document.getElementById('resetProgress');
     if (resetProgressBtn) {
       resetProgressBtn.addEventListener('click', function() {
         if (confirm('确定要重置所有记录吗？此操作不可恢复！')) {
           localStorage.removeItem('quitSmokeData');
-          // 重新初始化
+          // 重置状态
+          checkInData = {
+            records: {},
+            continuousDays: 0,
+            totalCheckInDays: 0,
+            makeUpCount: 0,
+            maxMakeUpCount: 3
+          };
           initForm();
-          // 隐藏结果区域
           const progressResultEl = document.getElementById('progressResult');
           const historySection = document.getElementById('historySection');
           if (progressResultEl) progressResultEl.classList.add('hidden');
