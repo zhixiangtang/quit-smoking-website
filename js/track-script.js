@@ -22,49 +22,47 @@ const ACHIEVEMENT_LIST = [
   { id: 365, color: "primary", target: 365 }
 ];
 
+// 全局变量：强制保存锁定状态（防止页面刷新丢失）
+let GLOBAL_IS_LOCKED = false;
+
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
-  // 初始化页面
+  // 1. 强制加载本地存储，同步锁定状态（核心修复）
+  forceLoadUserData();
+  // 2. 初始化页面
   initPage();
-  // 绑定事件
+  // 3. 绑定事件
   bindAllEvents();
 });
 
 /**
- * 初始化页面：加载数据 + 渲染UI
+ * 强制加载用户数据（核心修复：确保锁定状态100%同步）
  */
-function initPage() {
-  // 1. 加载本地存储数据（核心：确保数据永不丢失）
-  const userData = loadUserData();
-  
-  // 2. 填充表单数据
-  document.getElementById('startDate').value = userData.form.startDate || '';
-  document.getElementById('cigPerDay').value = userData.form.cigPerDay || '';
-  document.getElementById('pricePerPack').value = userData.form.pricePerPack || '';
-  document.getElementById('notes').value = userData.form.notes || '';
-  
-  // 3. 锁定/解锁表单
-  updateFormLockState(userData.isLocked);
-  
-  // 4. 如果有数据且已锁定，自动计算进度
-  if (userData.isLocked && userData.form.startDate && userData.form.cigPerDay && userData.form.pricePerPack) {
-    calculateProgress(
-      userData.form.startDate,
-      userData.form.cigPerDay,
-      userData.form.pricePerPack,
-      true // 静默计算，不重复锁定
-    );
+function forceLoadUserData() {
+  try {
+    const rawData = localStorage.getItem(STORAGE_KEY);
+    if (rawData) {
+      const userData = JSON.parse(rawData);
+      // 强制同步锁定状态到全局变量
+      GLOBAL_IS_LOCKED = userData.isLocked || false;
+      console.log('强制加载数据成功：', userData);
+    } else {
+      GLOBAL_IS_LOCKED = false;
+      console.log('无本地数据，初始化锁定状态为false');
+    }
+  } catch (error) {
+    console.error('强制加载数据失败：', error);
+    GLOBAL_IS_LOCKED = false;
   }
 }
 
 /**
- * 加载用户数据（本地存储核心逻辑）
+ * 加载用户完整数据
  * @returns {Object} 用户数据
  */
 function loadUserData() {
   try {
     const rawData = localStorage.getItem(STORAGE_KEY);
-    // 默认数据结构（确保不会出现undefined）
     const defaultData = {
       form: {
         startDate: '',
@@ -72,42 +70,69 @@ function loadUserData() {
         pricePerPack: '',
         notes: ''
       },
-      isLocked: false // 表单锁定状态
-    };
-    
-    return rawData ? JSON.parse(rawData) : defaultData;
-  } catch (error) {
-    console.error('加载数据失败:', error);
-    return {
-      form: {},
       isLocked: false
     };
+    return rawData ? JSON.parse(rawData) : defaultData;
+  } catch (error) {
+    console.error('加载数据失败：', error);
+    return { form: {}, isLocked: false };
   }
 }
 
 /**
- * 保存用户数据（确保数据同步到本地存储）
+ * 强制保存用户数据（确保锁定状态写入本地）
  * @param {Object} newData 新数据
  */
 function saveUserData(newData) {
   try {
     const oldData = loadUserData();
     const finalData = { ...oldData, ...newData };
+    // 强制同步全局锁定状态到保存数据
+    finalData.isLocked = GLOBAL_IS_LOCKED;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(finalData));
+    console.log('强制保存数据成功：', finalData);
     return true;
   } catch (error) {
-    console.error('保存数据失败:', error);
+    console.error('保存数据失败：', error);
     alert('数据保存失败，请检查浏览器存储权限！');
     return false;
   }
 }
 
 /**
- * 更新表单锁定状态
+ * 初始化页面：填充数据 + 强制锁定表单
+ */
+function initPage() {
+  const userData = loadUserData();
+  
+  // 1. 填充表单数据（强制填充，不丢失）
+  document.getElementById('startDate').value = userData.form.startDate || '';
+  document.getElementById('cigPerDay').value = userData.form.cigPerDay || '';
+  document.getElementById('pricePerPack').value = userData.form.pricePerPack || '';
+  document.getElementById('notes').value = userData.form.notes || '';
+  
+  // 2. 强制更新表单锁定状态（核心修复：忽略临时状态，以全局变量为准）
+  updateFormLockState(GLOBAL_IS_LOCKED);
+  
+  // 3. 有数据且已锁定 → 强制计算进度
+  if (GLOBAL_IS_LOCKED && userData.form.startDate && userData.form.cigPerDay && userData.form.pricePerPack) {
+    calculateProgress(
+      userData.form.startDate,
+      userData.form.cigPerDay,
+      userData.form.pricePerPack,
+      true // 静默计算
+    );
+  }
+}
+
+/**
+ * 更新表单锁定状态（强制同步UI和全局变量）
  * @param {boolean} isLocked 是否锁定
  */
 function updateFormLockState(isLocked) {
-  // 表单元素列表
+  // 强制同步全局变量
+  GLOBAL_IS_LOCKED = isLocked;
+  
   const formElements = [
     'startDate', 'cigPerDay', 'pricePerPack', 'notes', 'calculateBtn'
   ];
@@ -118,7 +143,6 @@ function updateFormLockState(isLocked) {
     
     el.disabled = isLocked;
     
-    // 添加/移除样式
     if (isLocked) {
       el.classList.add('bg-gray-100', 'cursor-not-allowed');
       if (id === 'calculateBtn') {
@@ -138,14 +162,9 @@ function updateFormLockState(isLocked) {
 }
 
 /**
- * 计算戒烟进度
- * @param {string} startDate 开始日期
- * @param {string} cigPerDay 每日吸烟量
- * @param {string} pricePerPack 每包价格
- * @param {boolean} silent 是否静默计算（不提示、不锁定）
+ * 计算戒烟进度（强制锁定）
  */
 function calculateProgress(startDate, cigPerDay, pricePerPack, silent = false) {
-  // 非静默计算时验证输入
   if (!silent) {
     if (!startDate || !cigPerDay || !pricePerPack) {
       alert('请填写完整的戒烟信息！');
@@ -172,47 +191,36 @@ function calculateProgress(startDate, cigPerDay, pricePerPack, silent = false) {
   // 更新UI
   document.getElementById('totalDaysQuit').textContent = `${daysQuit} 天`;
   document.getElementById('totalMoneySaved').textContent = `¥${moneySaved}`;
-  
-  // 更新成就进度
   updateAchievementProgress(daysQuit);
-  
-  // 更新鼓励语
   updateEncourageText(daysQuit);
   
-  // 非静默计算：锁定表单 + 保存数据
+  // 非静默计算：强制锁定+保存
   if (!silent) {
-    // 锁定表单
-    updateFormLockState(true);
-    // 保存数据
+    updateFormLockState(true); // 强制锁定
     saveUserData({
       form: {
         startDate: startDate,
         cigPerDay: cigPerDay,
         pricePerPack: pricePerPack,
         notes: document.getElementById('notes').value || ''
-      },
-      isLocked: true
+      }
     });
-    
     alert('戒烟进度计算完成！表单已锁定，如需修改请点击「重置记录」。');
   }
 }
 
 /**
  * 更新成就进度
- * @param {number} daysQuit 无烟天数
  */
 function updateAchievementProgress(daysQuit) {
   ACHIEVEMENT_LIST.forEach(item => {
     const progress = Math.min(100, (daysQuit / item.target) * 100);
-    // 更新进度条
     const progressBar = document.getElementById(`progress${item.id}`);
-    if (progressBar) progressBar.style.width = `${progress}%`;
-    // 更新进度文本
     const progressText = document.getElementById(`progressText${item.id}`);
-    if (progressText) progressText.textContent = `${daysQuit}/${item.target} 天`;
-    // 更新成就卡片样式
     const achievementCard = document.getElementById(`achievement${item.id}`);
+    
+    if (progressBar) progressBar.style.width = `${progress}%`;
+    if (progressText) progressText.textContent = `${daysQuit}/${item.target} 天`;
     if (achievementCard && daysQuit >= item.target) {
       achievementCard.classList.add(`border-${item.color}`, `bg-${item.color}/5`);
       achievementCard.classList.remove(`border-${item.color}/30`);
@@ -222,7 +230,6 @@ function updateAchievementProgress(daysQuit) {
 
 /**
  * 更新鼓励语
- * @param {number} daysQuit 无烟天数
  */
 function updateEncourageText(daysQuit) {
   const encourageEl = document.getElementById('encourageText');
@@ -235,28 +242,22 @@ function updateEncourageText(daysQuit) {
       break;
     }
   }
-  
   encourageEl.textContent = text;
 }
 
 /**
- * 重置所有记录
+ * 重置所有记录（强制解锁）
  */
 function resetAllData() {
-  if (!confirm('确定要重置所有记录吗？此操作不可恢复！')) {
-    return;
-  }
+  if (!confirm('确定要重置所有记录吗？此操作不可恢复！')) return;
   
-  // 1. 清空本地存储
-  localStorage.removeItem(STORAGE_KEY);
-  
-  // 2. 清空表单
-  document.getElementById('trackForm').reset();
-  
-  // 3. 解锁表单
+  // 强制解锁
   updateFormLockState(false);
-  
-  // 4. 重置UI
+  // 清空本地存储
+  localStorage.removeItem(STORAGE_KEY);
+  // 清空表单
+  document.getElementById('trackForm').reset();
+  // 重置UI
   document.getElementById('totalDaysQuit').textContent = '0 天';
   document.getElementById('totalMoneySaved').textContent = '¥0.00';
   updateAchievementProgress(0);
@@ -266,29 +267,25 @@ function resetAllData() {
 }
 
 /**
- * 绑定所有页面事件
+ * 绑定所有事件（强制验证锁定状态）
  */
 function bindAllEvents() {
-  // 1. 表单提交事件
+  // 表单提交事件：强制验证全局锁定状态
   document.getElementById('trackForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // 阻止默认提交
+    e.preventDefault();
     
-    // 检查表单是否已锁定
-    const userData = loadUserData();
-    if (userData.isLocked) {
+    if (GLOBAL_IS_LOCKED) {
       alert('表单已锁定，如需修改请点击「重置记录」按钮！');
       return;
     }
     
-    // 获取表单数据
     const startDate = document.getElementById('startDate').value;
     const cigPerDay = document.getElementById('cigPerDay').value;
     const pricePerPack = document.getElementById('pricePerPack').value;
     
-    // 计算进度
     calculateProgress(startDate, cigPerDay, pricePerPack);
   });
   
-  // 2. 重置按钮点击事件
+  // 重置按钮事件
   document.getElementById('resetBtn').addEventListener('click', resetAllData);
 }
