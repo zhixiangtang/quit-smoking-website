@@ -20,7 +20,10 @@
             light: '#F9FAFB',
             gold: '#D4AF37',    
             silver: '#C0C0C0',  
-            bronze: '#CD7F32'   
+            bronze: '#CD7F32',
+            checkIn: '#10B981',  // 打卡成功颜色
+            checkInMiss: '#EF4444', // 未打卡颜色
+            checkInMakeUp: '#F59E0B' // 补卡颜色
           },
           fontFamily: {
             sans: ['PingFang SC', 'Microsoft YaHei', 'sans-serif'],
@@ -34,11 +37,11 @@
   <nav class="sticky top-0 bg-white shadow-md z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <a href="/quit-smoking-website/index.html" class="flex items-center gap-2">
-        <i class="fa-solid fa-lungs text-primary text-2xl"></i>
+        <<i class="fa-solid fa-lungs text-primary text-2xl"></</i>
         <span class="text-xl font-bold text-primary">戒烟助手</span>
       </a>
       <a href="/quit-smoking-website/index.html" class="text-primary hover:text-primary/80 transition-colors">
-        <i class="fa-solid fa-home mr-1"></i> 返回首页
+        <<i class="fa-solid fa-home mr-1"></</i> 返回首页
       </a>
     </div>
   </nav>
@@ -54,8 +57,8 @@
         <div class="text-center p-4 bg-primary/5 rounded-lg">
           <p class="text-gray-600 mb-1">今日打卡</p>
           <p id="checkInStatus" class="text-xl font-bold text-primary">未打卡</p>
-          <button id="checkInBtn" class="mt-2 px-3 py-1 bg-primary text-white rounded text-sm hover:bg-primary/90 transition-colors">
-            <i class="fa-solid fa-check mr-1"></i> 立即打卡
+          <button id="todayCheckInBtn" class="mt-2 px-3 py-1 bg-primary text-white rounded text-sm hover:bg-primary/90 transition-colors">
+            <<i class="fa-solid fa-check mr-1"></</i> 今日打卡
           </button>
         </div>
         <div class="text-center p-4 bg-accent/5 rounded-lg">
@@ -72,7 +75,45 @@
         </div>
       </div>
 
-      <div class="p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg text-center">
+      <!-- 新增：日历打卡模块 -->
+      <div class="mt-8">
+        <h3 class="font-semibold text-xl mb-4 flex items-center">
+          <<i class="fa-solid fa-calendar-check text-primary mr-2"></</i> 打卡日历
+        </h3>
+        <div class="flex justify-between items-center mb-4">
+          <button id="prevMonthBtn" class="px-3 py-1 border rounded hover:bg-gray-100 transition-colors">
+            <<i class="fa-solid fa-chevron-left mr-1"></</i> 上月
+          </button>
+          <h4 id="currentMonthTitle" class="font-medium text-lg">2026年1月</h4>
+          <button id="nextMonthBtn" class="px-3 py-1 border rounded hover:bg-gray-100 transition-colors">
+            下月 <<i class="fa-solid fa-chevron-right ml-1"></</i>
+          </button>
+        </div>
+        <!-- 星期标题 -->
+        <div class="grid grid-cols-7 gap-1 mb-1 text-center text-sm font-medium text-gray-600">
+          <div>日</div>
+          <div>一</div>
+          <div>二</div>
+          <div>三</div>
+          <div>四</div>
+          <div>五</div>
+          <div>六</div>
+        </div>
+        <!-- 日历网格 -->
+        <div id="calendarGrid" class="grid grid-cols-7 gap-1">
+          <!-- 日历日期由JS动态生成 -->
+        </div>
+        <!-- 补卡按钮 -->
+        <div class="mt-4 text-center">
+          <button id="makeUpCheckInBtn" class="px-4 py-2 bg-checkInMakeUp text-white rounded hover:bg-checkInMakeUp/90 transition-colors">
+            <<i class="fa-solid fa-clock-rotate-left mr-1"></</i> 补卡（7天内）
+          </button>
+          <p class="text-xs text-gray-500 mt-2">支持补7天内未打卡的日期，每月限3次补卡机会</p>
+        </div>
+      </div>
+
+      <!-- 今日鼓励语 -->
+      <div class="p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg text-center mt-8">
         <h3 class="font-semibold mb-2">今日鼓励</h3>
         <p id="encourageText" class="text-lg font-medium">戒烟从今天开始，你已经迈出了最重要的一步！</p>
       </div>
@@ -111,7 +152,7 @@
       <div class="grid md:grid-cols-3 gap-6">
         <div id="achievement7" class="border-2 border-bronze/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
           <div class="text-bronze text-4xl mb-3">
-            <i class="fa-solid fa-medal"></i>
+            <<i class="fa-solid fa-medal"></</i>
           </div>
           <h4 class="font-semibold mb-2">青铜戒烟者</h4>
           <p class="text-gray-600 text-sm mb-3">连续无烟7天</p>
@@ -122,7 +163,7 @@
         </div>
         <div id="achievement30" class="border-2 border-silver/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
           <div class="text-silver text-4xl mb-3">
-            <i class="fa-solid fa-medal"></i>
+            <<i class="fa-solid fa-medal"></</i>
           </div>
           <h4 class="font-semibold mb-2">白银戒烟者</h4>
           <p class="text-gray-600 text-sm mb-3">连续无烟30天</p>
@@ -133,7 +174,7 @@
         </div>
         <div id="achievement100" class="border-2 border-gold/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
           <div class="text-gold text-4xl mb-3">
-            <i class="fa-solid fa-medal"></i>
+            <<i class="fa-solid fa-medal"></</i>
           </div>
           <h4 class="font-semibold mb-2">黄金戒烟者</h4>
           <p class="text-gray-600 text-sm mb-3">连续无烟100天</p>
@@ -145,7 +186,7 @@
       </div>
       <div id="achievement365" class="mt-6 border-2 border-primary/30 rounded-xl p-4 text-center hover:shadow-lg transition-all">
         <div class="text-primary text-4xl mb-3">
-          <i class="fa-solid fa-trophy"></i>
+          <<i class="fa-solid fa-trophy"></</i>
         </div>
         <h4 class="font-semibold mb-2">戒烟大师</h4>
         <p class="text-gray-600 text-sm mb-3">连续无烟365天（成功戒烟！）</p>
@@ -164,31 +205,31 @@
         <a href="/quit-smoking-website/entertainment/games.html" target="_blank" class="group">
           <div class="bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-6 text-center hover:shadow-lg transition-all h-full">
             <div class="text-accent text-4xl mb-4 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-gamepad"></i>
+              <<i class="fa-solid fa-gamepad"></</i>
             </div>
             <h4 class="font-semibold mb-2">小游戏专区</h4>
             <p class="text-gray-600 text-sm">休闲小游戏，转移烟瘾注意力</p>
-            <p class="mt-4 text-accent text-sm group-hover:underline">点击进入 <i class="fa-solid fa-arrow-right ml-1"></i></p>
+            <p class="mt-4 text-accent text-sm group-hover:underline">点击进入 <<i class="fa-solid fa-arrow-right ml-1"></</i></p>
           </div>
         </a>
         <a href="/quit-smoking-website/entertainment/music.html" target="_blank" class="group">
           <div class="bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl p-6 text-center hover:shadow-lg transition-all h-full">
             <div class="text-secondary text-4xl mb-4 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-music"></i>
+              <<i class="fa-solid fa-music"></</i>
             </div>
             <h4 class="font-semibold mb-2">舒缓音乐</h4>
             <p class="text-gray-600 text-sm">放松音乐，缓解戒烟焦虑</p>
-            <p class="mt-4 text-secondary text-sm group-hover:underline">点击进入 <i class="fa-solid fa-arrow-right ml-1"></i></p>
+            <p class="mt-4 text-secondary text-sm group-hover:underline">点击进入 <<i class="fa-solid fa-arrow-right ml-1"></</i></p>
           </div>
         </a>
         <a href="/quit-smoking-website/entertainment/reading.html" target="_blank" class="group">
           <div class="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-6 text-center hover:shadow-lg transition-all h-full">
             <div class="text-primary text-4xl mb-4 group-hover:scale-110 transition-transform">
-              <i class="fa-solid fa-book-open"></i>
+              <<i class="fa-solid fa-book-open"></</i>
             </div>
             <h4 class="font-semibold mb-2">阅读专区</h4>
             <p class="text-gray-600 text-sm">优质文章，充实戒烟时光</p>
-            <p class="mt-4 text-primary text-sm group-hover:underline">点击进入 <i class="fa-solid fa-arrow-right ml-1"></i></p>
+            <p class="mt-4 text-primary text-sm group-hover:underline">点击进入 <<i class="fa-solid fa-arrow-right ml-1"></</i></p>
           </div>
         </a>
       </div>
@@ -218,10 +259,10 @@
       </div>
       <div class="flex justify-center gap-4">
         <button id="saveProgress" class="bg-secondary text-white px-6 py-2 rounded-lg hover:bg-secondary/90 transition-colors">
-          <i class="fa-solid fa-save mr-2"></i> 保存我的进度
+          <<i class="fa-solid fa-save mr-2"></</i> 保存我的进度
         </button>
         <button id="resetProgress" class="bg-gray-200 text-dark px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors">
-          <i class="fa-solid fa-refresh mr-2"></i> 重置记录
+          <<i class="fa-solid fa-refresh mr-2"></</i> 重置记录
         </button>
       </div>
     </div>
