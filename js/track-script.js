@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: 365, name: "戒烟大师", color: "primary", target: 365 }
   ];
 
-  // 加载本地存储数据
+  // 加载本地存储数据（核心修复：确保数据不丢失）
   const loadSavedData = () => {
     try {
       const savedData = localStorage.getItem('quitSmokeData');
@@ -37,24 +37,22 @@ document.addEventListener('DOMContentLoaded', function() {
           pricePerPack: '',
           notes: ''
         },
-        history: [],
-        isFormLocked: false // 新增：表单锁定状态
+        isFormLocked: false // 表单锁定状态
       };
       const data = savedData ? JSON.parse(savedData) : defaultData;
-      // 同步全局锁定状态
+      // 同步全局状态（关键：修复返回首页后状态丢失）
       isFormLocked = data.isFormLocked || false;
       return data;
     } catch (e) {
       console.error('加载数据失败:', e);
       return {
         form: {},
-        history: [],
         isFormLocked: false
       };
     }
   };
 
-  // 保存数据到本地存储
+  // 保存数据到本地存储（确保所有状态同步）
   const saveData = (data = {}) => {
     try {
       const savedData = loadSavedData();
@@ -70,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-  // 初始化表单数据
+  // 初始化表单数据（核心修复：加载数据后自动计算进度）
   const initForm = () => {
     const savedData = loadSavedData();
     const startDateEl = document.getElementById('startDate');
@@ -79,14 +77,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const notesEl = document.getElementById('notes');
     const calculateBtn = document.getElementById('calculateBtn');
 
-    // 填充已保存的表单数据
+    // 填充已保存的表单数据（关键：修复返回首页后数据丢失）
     if (savedData && savedData.form) {
       if (startDateEl) startDateEl.value = savedData.form.startDate || '';
       if (cigPerDayEl) cigPerDayEl.value = savedData.form.cigPerDay || '';
       if (pricePerPackEl) pricePerPackEl.value = savedData.form.pricePerPack || '';
       if (notesEl) notesEl.value = savedData.form.notes || '';
       
-      // 如果有保存的表单数据且表单已锁定，直接计算进度
+      // 有数据且表单已锁定 → 自动计算进度（无需手动点击）
       if (savedData.form.startDate && savedData.form.cigPerDay && savedData.form.pricePerPack && isFormLocked) {
         calculateProgress(
           savedData.form.startDate, 
@@ -120,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     formElements.forEach(el => {
       if (el) {
-        // 锁定状态：禁用输入框和计算按钮
         el.disabled = isFormLocked;
         if (isFormLocked) {
           el.classList.add('bg-gray-100', 'cursor-not-allowed');
@@ -141,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   };
 
-  // 计算戒烟进度
+  // 计算戒烟进度（移除成果展示相关逻辑）
   const calculateProgress = (startDateVal, cigPerDayVal, pricePerPackVal, silent = false) => {
     if (!silent) {
       // 非静默计算：验证输入
@@ -158,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // 锁定表单（核心逻辑）
+      // 锁定表单
       isFormLocked = true;
       updateFormLockState();
     }
@@ -170,53 +167,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const timeDiff = today - startDate;
     const daysQuit = Math.max(0, Math.floor(timeDiff / (1000 * 60 * 60 * 24)));
     
-    const packsPerDay = cigPerDay / 20; // 每包20支
+    const packsPerDay = cigPerDay / 20;
     const moneySaved = (packsPerDay * pricePerPack * daysQuit).toFixed(2);
-    const cigAvoided = cigPerDay * daysQuit;
     
-    // 更新UI显示
-    const daysQuitEl = document.getElementById('daysQuit');
-    const moneySavedEl = document.getElementById('moneySaved');
-    const cigAvoidedEl = document.getElementById('cigAvoided');
-    const healthStatusEl = document.getElementById('healthStatus');
+    // 仅更新顶部核心数据（移除成果展示区更新）
     const totalDaysQuitEl = document.getElementById('totalDaysQuit');
     const totalMoneySavedEl = document.getElementById('totalMoneySaved');
 
-    if (daysQuitEl) daysQuitEl.textContent = daysQuit;
-    if (moneySavedEl) moneySavedEl.textContent = `¥${moneySaved}`;
-    if (cigAvoidedEl) cigAvoidedEl.textContent = `${cigAvoided} 支`;
     if (totalDaysQuitEl) totalDaysQuitEl.textContent = daysQuit;
     if (totalMoneySavedEl) totalMoneySavedEl.textContent = `¥${moneySaved}`;
-
-    // 更新健康状态
-    let healthStatus = '';
-    if (daysQuit < 1) healthStatus = '今天就开启你的戒烟之旅吧！';
-    else if (daysQuit < 7) healthStatus = '尼古丁正在离开你的身体 - 做得很棒！';
-    else if (daysQuit < 30) healthStatus = '你的肺功能正在改善，呼吸更顺畅了！';
-    else if (daysQuit < 90) healthStatus = '恭喜！你已经度过最难熬的阶段，烟瘾基本消失。';
-    else if (daysQuit < 365) healthStatus = '你的心脏病风险已降低一半，身体状态大幅提升！';
-    else healthStatus = '太棒了！你的身体已完全恢复，远离吸烟的伤害。';
-    
-    if (healthStatusEl) healthStatusEl.textContent = healthStatus;
 
     // 更新成就进度和鼓励语
     updateAchievementProgress(daysQuit);
     updateEncourageText(daysQuit);
     
-    // 显示计算结果区域
-    const progressResultEl = document.getElementById('progressResult');
-    if (progressResultEl) progressResultEl.classList.remove('hidden');
-    
     if (!silent) {
-      // 保存表单数据和锁定状态
+      // 保存数据（关键：确保返回首页后数据不丢失）
       const savedData = loadSavedData();
-      savedData.history.push({
-        date: new Date().toISOString().split('T')[0],
-        daysQuit: daysQuit,
-        moneySaved: moneySaved,
-        cigAvoided: cigAvoided
-      });
-      if (savedData.history.length > 10) savedData.history = savedData.history.slice(-10);
       savedData.form = {
         startDate: startDateVal,
         cigPerDay: cigPerDayVal,
@@ -274,15 +241,13 @@ document.addEventListener('DOMContentLoaded', function() {
     encourageTextEl.textContent = matchedText;
   };
 
-  // 重置所有记录（解锁表单）
+  // 重置所有记录
   const resetAllData = () => {
     if (confirm('确定要重置所有记录吗？此操作不可恢复！')) {
-      // 重置全局状态
       isFormLocked = false;
-      // 清空本地存储
       localStorage.removeItem('quitSmokeData');
-      // 重置表单UI
       updateFormLockState();
+      
       // 清空表单值
       const formElements = [
         document.getElementById('startDate'),
@@ -293,83 +258,53 @@ document.addEventListener('DOMContentLoaded', function() {
       formElements.forEach(el => {
         if (el) el.value = '';
       });
-      // 隐藏结果区域
-      const progressResultEl = document.getElementById('progressResult');
-      if (progressResultEl) progressResultEl.classList.add('hidden');
-      // 重置成就进度
+      
+      // 重置顶部数据和成就
+      const totalDaysQuitEl = document.getElementById('totalDaysQuit');
+      const totalMoneySavedEl = document.getElementById('totalMoneySaved');
+      if (totalDaysQuitEl) totalDaysQuitEl.textContent = '0 天';
+      if (totalMoneySavedEl) totalMoneySavedEl.textContent = '¥0.00';
+      
       achievementConfig.forEach(achievement => {
         const progressBar = document.getElementById(`progress${achievement.id}`);
         const progressText = document.getElementById(`progressText${achievement.id}`);
         if (progressBar) progressBar.style.width = '0%';
         if (progressText) progressText.textContent = `0/${achievement.target} 天`;
       });
-      // 重置鼓励语
-      updateEncourageText(0);
-      // 重置顶部数据
-      const totalDaysQuitEl = document.getElementById('totalDaysQuit');
-      const totalMoneySavedEl = document.getElementById('totalMoneySaved');
-      if (totalDaysQuitEl) totalDaysQuitEl.textContent = '0 天';
-      if (totalMoneySavedEl) totalMoneySavedEl.textContent = '¥0.00';
       
+      updateEncourageText(0);
       alert('所有记录已重置！你可以重新录入戒烟信息。');
     }
   };
 
-  // 绑定所有事件
+  // 绑定事件
   const bindEvents = () => {
     // 表单提交事件
     const trackForm = document.getElementById('trackForm');
     if (trackForm) {
       trackForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // 阻止默认提交
+        e.preventDefault();
         
-        // 如果表单已锁定，直接返回
         if (isFormLocked) {
           alert('表单已锁定，如需修改请点击「重置记录」按钮！');
           return;
         }
         
-        // 获取表单数据
         const startDate = document.getElementById('startDate').value;
         const cigPerDay = document.getElementById('cigPerDay').value;
         const pricePerPack = document.getElementById('pricePerPack').value;
         
-        // 计算进度（自动锁定表单）
         calculateProgress(startDate, cigPerDay, pricePerPack);
       });
     }
 
-    // 保存进度按钮
-    const saveProgressBtn = document.getElementById('saveProgress');
-    if (saveProgressBtn) {
-      saveProgressBtn.addEventListener('click', function() {
-        const savedData = loadSavedData();
-        const startDate = document.getElementById('startDate').value;
-        const cigPerDay = document.getElementById('cigPerDay').value;
-        const pricePerPack = document.getElementById('pricePerPack').value;
-        const notes = document.getElementById('notes').value;
-        
-        // 更新表单数据
-        savedData.form = {
-          startDate: startDate,
-          cigPerDay: cigPerDay,
-          pricePerPack: pricePerPack,
-          notes: notes
-        };
-        savedData.isFormLocked = isFormLocked;
-        
-        saveData(savedData);
-        alert('进度保存成功！');
-      });
-    }
-
-    // 重置记录按钮（核心：解锁表单）
+    // 重置按钮事件
     const resetProgressBtn = document.getElementById('resetProgress');
     if (resetProgressBtn) {
       resetProgressBtn.addEventListener('click', resetAllData);
     }
   };
 
-  // 初始化页面
+  // 初始化页面（确保加载数据后自动计算）
   initForm();
 });
